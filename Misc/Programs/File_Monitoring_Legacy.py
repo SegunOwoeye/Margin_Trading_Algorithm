@@ -15,7 +15,8 @@ def get_files_to_delete(path):
     files = get_filenames(path)
     to_delete = []
     for n in range(len(path)):
-        for i in range(len(files)):
+        no_of_files = len(files[n]) # Gets the number of files that exists in the folder
+        for i in range(no_of_files):
             complete_filenames = f"{path[n]}/{files[n][i]}"
             #print(complete_filenames)
             if os.path.exists(complete_filenames) == True:
@@ -55,6 +56,6 @@ def run(path):
 
 #path = ["1-DataGathering/data_gathered/BTCUSDT_data/Live_Data", "1-DataGathering/data_gathered/BTCUSDT_data/Historical_Klines"]
 
-#print(get_files_to_delete(path))
+#print(get_files_to_delete(path)) 
 
 #run(path)
