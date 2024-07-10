@@ -1,5 +1,9 @@
 ```[tasklist]
 ### My tasks
-- [ ] https://github.com/octo-org/octo-repo/issues/45
-- [ ] Draft task
+- [ ] Create an whatapp group for sending notifications that can start and stop the program remotley on the PC
+- [ ] Address problem with short side assets in the orderbook file
+- [ ] Attempt running on PC
+- [ ]
+- [ ]
+- [ ] 
 ```
