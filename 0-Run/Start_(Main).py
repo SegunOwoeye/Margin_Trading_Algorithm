@@ -12,7 +12,7 @@ pair_list = ["BTCUSDT"]#, "ETHUSDT"]
 
 #-> Declaring time intervals
 time_intervals = ["5m"]
-config_ti = ["1m", "5m", "15m", "1h", "4h", "1d"] # Time intervals for creating program files
+config_ti = ["1m", "5m", "15m", "1h", "4h", "1d"] # Time intervals for creating program files 
 
 #-> Declaring Limit for Historical Data Gathered
 limit = 1000

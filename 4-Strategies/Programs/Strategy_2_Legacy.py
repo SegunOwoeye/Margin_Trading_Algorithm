@@ -263,6 +263,11 @@ def printTodatabase(trading_pair, exchange_name, chart_interval, emaL1_interval,
                 cursor.execute("Select * FROM trade_data")
                 list_check = cursor.fetchall()
                 #recent_log = list_check[-1]
+
+                
+                """ Impliment method for determining traded funds for the asset"""
+
+
                 
                 # If the orderbook is empty
                 if not list_check:
