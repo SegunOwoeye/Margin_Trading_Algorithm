@@ -164,8 +164,8 @@ def data_processing_file_lists():
     # Running Delete Empty Files programs
     run_File_Monitoring = []
     sections_monitored = 2
-    for i in range(1,sections_monitored):
-        program_name = f"Misc\Programs\FIle_Monitoring\File_Monitoring_{i}.py"
+    for i in range(sections_monitored):
+        program_name = f"Misc/Programs/FIle_Monitoring/File_Monitoring_{i+1}.py"
         run_File_Monitoring.append(program_name)
     
     """program_list = (run_atr_programs + run_GARCH_programs + run_mr_programs + run_SMA_programs + run_EMA_programs + run_WF_programs 

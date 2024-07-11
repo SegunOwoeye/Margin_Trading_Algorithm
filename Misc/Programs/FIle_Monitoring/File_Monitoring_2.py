@@ -17,5 +17,3 @@ for i in range(len(trading_pairs)):
     
 
 run(path)
-
-
