@@ -243,8 +243,8 @@ def printTodatabase(trading_pair, exchange_name, chart_interval, emaL1_interval,
                 Stop_Limit = calc_marker.get_stop_limit_price()
                 # [20] Order Type
                 Order_type = "OCO" # Order Cancel Order 
-                # [18] Account Balance Traded
-                Account_Balance_Traded = tradeing_funds[1]
+                # [18] Account Balance Traded 
+                Account_Balance_Traded = tradeing_funds[1] 
                 # Timestamp Time
                 server_time = round(time(),0)
                 
@@ -266,7 +266,10 @@ def printTodatabase(trading_pair, exchange_name, chart_interval, emaL1_interval,
 
                 
                 """ Impliment method for determining traded funds for the asset"""
-
+                
+                path.append("ZZ-General_Functions/Programs")
+                from Interval_to_time import convert
+                duplicate_time = convert(chart_interval) * 4
 
                 
                 # If the orderbook is empty
@@ -282,7 +285,7 @@ def printTodatabase(trading_pair, exchange_name, chart_interval, emaL1_interval,
                     connection.close() #Closing the database
                 
                 # If an order for the same strategy has recently been placed
-                elif ((server_time-float(list_check[-1][1])) <= 60*60) and (list_check[-1][22] == Strategy_Name): # Wait and do nothing
+                elif ((server_time-float(list_check[-1][1])) <= duplicate_time) and (list_check[-1][22] == Strategy_Name): # Wait and do nothing
                     #print(f"An order for {Strategy_Name} with {trading_pair} has recently been placed")
                     sleep(5)
 
@@ -378,7 +381,7 @@ def run(trading_pair, exchange_name, chart_interval, emaL1_interval, emaL2_inter
                                 WFC_file_check.append(1)
                             else:
                                 WFC_file_check.append(0)
-                        if sum(WFC_file_check) == len(WFC_filename): #
+                        if sum(WFC_file_check) == len(WFC_filename): 
                             # Run Program
                             printTodatabase(trading_pair, exchange_name, chart_interval, emaL1_interval, emaL2_interval, emaL3_interval,
                                 emaS1_interval, emaS2_interval, emaS3_interval, rsi_interval, leverage, L_TP, S_TP, 
@@ -403,6 +406,10 @@ def run(trading_pair, exchange_name, chart_interval, emaL1_interval, emaL2_inter
             sleep(2)"""
         except Exception as e:
             print(f"4-Strategies/Programs/{trading_pair}/Strategy_2_{trading_pair}interval={str(chart_interval)}.py has error: " + str(e))
+
+            path.append("ZZ-General_Functions/Programs")
+            from Error_handling import Handling_Error
+            Handling_Error(e).No_Data_Table_Error()
 
 
 """ TESTING """

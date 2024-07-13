@@ -1,6 +1,7 @@
 # FILE COMPLETE - V1.0
 from datetime import datetime
 from os.path import exists
+from sys import path
 import sqlite3
 from time import sleep
 
@@ -140,6 +141,9 @@ def run(trading_pair, exchange_name, chart_interval, indicator_interval, db_name
 
         except Exception as e:
             print(f"2-DataProcessing/Programs/{trading_pair}/Relative_Strength_Indicator_{trading_pair}interval={str(chart_interval)}tick={indicator_interval}.py has error: " + str(e))
+            path.append("ZZ-General_Functions/Programs")
+            from Error_handling import Handling_Error
+            Handling_Error(e).No_Data_Table_Error()
 
 
 

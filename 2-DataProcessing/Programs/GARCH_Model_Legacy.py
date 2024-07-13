@@ -9,6 +9,7 @@ from datetime import datetime
 import sqlite3
 from time import sleep
 from os.path import exists
+from sys import path
 
 #Give a 10 second lead time to allow Chart history time to load
 
@@ -263,7 +264,9 @@ def run(trading_pair, exchange_name, chart_interval, indicator_interval):
         
         except Exception as e:
             print(f"2-DataProcessing/Programs/{trading_pair}/GARCH_data_{trading_pair}interval={chart_interval}.py has error: " + str(e))
-
+            path.append("ZZ-General_Functions/Programs")
+            from Error_handling import Handling_Error
+            Handling_Error(e).No_Data_Table_Error()
 
 #(run("BTCUSDT", "Binance", "4h", 1000))
 

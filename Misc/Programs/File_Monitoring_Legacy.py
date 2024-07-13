@@ -49,7 +49,7 @@ def run(path):
         try:
             delete_files(path)
         except:
-            sleep(10) # Checks if files need to be deleted every 10 seconds
+            sleep(2) # Checks if files need to be deleted every 1 seconds
             pass
 
 """ TESTING """

@@ -1,5 +1,5 @@
 from datetime import datetime
-from os.path import exists
+from os import path
 import sqlite3
 from math import floor, log10
 
@@ -38,7 +38,7 @@ class pair_balance:
             #print(file_name)
             
             try:
-                if exists(file_name):
+                if path.exists(file_name):
                     connection = sqlite3.connect(file_name)
                     cursor = connection.cursor()
 
@@ -72,7 +72,7 @@ class pair_balance:
             #print(file_name)
             
             try:
-                if exists(file_name):
+                if path.exists(file_name):
                     connection = sqlite3.connect(file_name)
                     cursor = connection.cursor()
 
@@ -116,6 +116,12 @@ class calculating_markers:
         self.S_SL = S_SL
         self.tradable_funds_percentage = tradable_funds_percentage
         self.side = side
+
+    # Function for getting the current Closing Price of an asset - WORKING
+    def get_current_data(self):
+        path.append("ZZ-General_Functions/Programs")
+        from get_current_data import current_data
+        return current_data(self.trading_pair, self.exchange_name, self.chart_interval)
     
     # [4] Leverage
     def Leverage(self):
@@ -170,23 +176,31 @@ class calculating_markers:
         precision_data = calculating_markers(self.trading_pair, self.exchange_name, self.chart_interval, self.flag, self.leverage, 
                                     self.L_TP, self.S_TP, self.L_SL, self.S_SL, self.tradable_funds_percentage,
                                     self.side).get_asset_precision()
-
+        
+        # For Initialising trades, all assets origionate from the USDT balance
         for i in range(len(pairs)):
             if (pairs[i] == "USDT" or pairs[i] == "USDC"): 
                 if self.side == "LONG":
                     balance = pair_balance(self.trading_pair, self.exchange_name, self.chart_interval, self.flag).flag_balance()[1]
                     precision = precision_data[2]
-                else:
-                    pass
+                else: pass
             elif self.side == "SHORT":
-                balance = pair_balance(self.trading_pair, self.exchange_name, self.chart_interval, self.flag).flag_balance()[0]
-                precision = precision_data[1]
+                balance = pair_balance(self.trading_pair, self.exchange_name, self.chart_interval, self.flag).flag_balance()[1]
+                precision = precision_data[2]
             else: pass
           
-        ### NEED TO FIND THE PRECISION OF ALL ASSETS   
-        equity = balance * (self.tradable_funds_percentage/100) * self.leverage
-        Account_balance_Traded = balance * (self.tradable_funds_percentage/100)
-        
+        ### NEED TO FIND THE PRECISION OF ALL ASSETS
+        # Continues with Regular Operation for Leveraging
+        if self.side == "LONG":   
+            equity = balance * (self.tradable_funds_percentage/100) * self.leverage
+            Account_balance_Traded = balance * (self.tradable_funds_percentage/100)
+        # Special conditioning
+        elif self.side == "SHORT":
+            closing_price = self.get_current_data()[4]
+            equity = (balance * (self.tradable_funds_percentage/100) * (self.leverage-1))/closing_price
+            Account_balance_Traded = (balance * (self.tradable_funds_percentage/100))/closing_price
+
+
         return self.round_sign_number(precision, equity), self.round_sign_number(precision, Account_balance_Traded)
         
     # [7] Gets the hourly interest rate of the asset
@@ -284,8 +298,9 @@ class calculating_markers:
             stop_limit = stop_loss * (1 + (1)/100)
         
         return self.round_sign_number(precision,stop_limit)
-
-
+    
+    
+    
 
 # TESTING
 

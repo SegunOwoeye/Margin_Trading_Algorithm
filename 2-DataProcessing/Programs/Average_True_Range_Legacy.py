@@ -2,6 +2,7 @@ from datetime import datetime
 from os.path import exists
 import sqlite3
 from time import sleep
+from sys import path
 
 #CREATES A DATABASE FILE - WORKING
 def creating_db_file(exchange_pair, exchange_names, chart_interval):
@@ -205,7 +206,10 @@ def run(trading_pair, exchange_name, chart_interval, indicator_interval):
 
         except Exception as e:
             print(f"2-DataProcessing/Programs/{trading_pair}/Average_True_Range_{trading_pair}interval={chart_interval}.py has error: " + str(e))
-
+            
+            path.append("ZZ-General_Functions/Programs")
+            from Error_handling import Handling_Error
+            Handling_Error(e).No_Data_Table_Error()
 
 
 #(run("BTCUSDT", "Binance", "5m", 14))
