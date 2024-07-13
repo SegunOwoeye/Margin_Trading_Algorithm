@@ -10,6 +10,11 @@ Use the "Start_(Main).py" file in "0-Run" folder to run the trading Algorithm
 3. Activate virtual evironment ".venv/Scripts/activate"
 4. Run start program "python 0-Run/Start_(Main).py"
 
+### Things to rememnber:
+- Github doesn't store empty folders
+
 ## Copyright
 
 This program is not for public use and belongs soley to the Programmer Olusegun Owoeye.
+
+
