@@ -158,7 +158,7 @@ def data_processing_file_lists():
         for i in range(len(time_intervals)): 
             for l in range(len(rsi_intervals)):
                 program_name = f"2-DataProcessing/Programs/{pair_list[n]}/Williams_Fractal_Cap_{pair_list[n]}interval={time_intervals[i]}tick={wfc_intervals[l]}.py"
-                run_WFC_programs.append(program_name) 
+                run_WFC_programs.append(program_name)  
 
 
     # Running Delete Empty Files programs
