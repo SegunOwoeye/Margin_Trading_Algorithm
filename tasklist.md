@@ -12,6 +12,7 @@
 - [ ] Research and Add additional strategies
 - [tbd] When an error occurs, wait 30 seconds before running the program again -> With this change, make a central setting database where general settings as to how this shoudl run for all programs are held (e.g. error wait times)
 - [ ] To gauge the direction of the market use a linear/ 2nd order polynomial regression to see what trend the market is going in, do this for for n points until the R swuared value isn't trustworthy (Estimate is 90% however may need to be backtested)
+- [ ] Solve RSI division by zero error, (Non Critical)
 ### Additional Projects
 - [] Make is so multiple people can register onto the system
 ```
