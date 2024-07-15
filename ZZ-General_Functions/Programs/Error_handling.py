@@ -17,6 +17,13 @@ class Handling_Error:
 
         else: pass
             #print("L")
+
+    # Float division by Zero Error
+    def div_by_zero_error(self):
+        if ZeroDivisionError == type(self.Error):
+            return 100
+        else: pass
+
             
 
 
@@ -26,10 +33,11 @@ class Handling_Error:
 #Variables
 '''
 try:
-    current_data("BTCUSDT", "Binance", "5m")
+    lol = 1/0
+    print(lol)
 except Exception as Error: 
-    print(type(Error))
+    #print(type(Error))
 
     main = Handling_Error(Error)
-    main.No_Data_Table_Error()'''
+    print(main.div_by_zero_error())'''
         

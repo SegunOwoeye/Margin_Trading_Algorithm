@@ -107,9 +107,16 @@ def RSI(trading_pair, exchange_name, chart_interval, indicator_interval):
 
     average_gains = sum(gains)/len(closing_prices_list)
     average_losses = sum(losses)/len(closing_prices_list)
+    
+    try:
+        rsi = 100 - (100/(1+abs(average_gains/average_losses)))
+        rsi = round(rsi,2)
+    except Exception as e:
+        path.append("ZZ-General_Functions/Programs")
+        from Error_handling import Handling_Error
+        rsi = Handling_Error(e).div_by_zero_error()
 
-    rsi = 100 - (100/(1+abs(average_gains/average_losses)))
-    rsi = round(rsi,2)
+
 
 
     return rsi
@@ -179,7 +186,7 @@ def run(trading_pair, exchange_name, chart_interval, indicator_interval, db_name
 
 
 """TESTING"""
-#RSI("BTCUSDT", "Binance", "5m", 6)
+print(RSI("BTCUSDT", "Binance", "5m", 6))
 #run("BTCUSDT", "Binance", "5m", 14)
 #(run("BTCUSDT", "Binance", 1, 14, "RSI"))
 
