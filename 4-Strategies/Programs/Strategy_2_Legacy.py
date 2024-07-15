@@ -139,53 +139,60 @@ def wf_cofirmation(trading_pair, exchange_name, chart_interval, indicator_interv
 """ [3] DETERMINES IF ALL THE CONDITIONS FOR TRIGGERING A LONG/ SHORT SIGNAL HAVE BEEN MET """
 def strategy(trading_pair, exchange_name, chart_interval, emaL1_interval, emaL2_interval, emaL3_interval,
              emaS1_interval, emaS2_interval, emaS3_interval, rsi_interval):
-    """GATHERING SIGNALS - W"""
-    # WF signal 
-    wf_signal = WF_read(trading_pair, exchange_name, chart_interval)
-    # EMA value Long
-    emaL1_value = ema_read(trading_pair, exchange_name, chart_interval, emaL1_interval)
-    emaL2_value = ema_read(trading_pair, exchange_name, chart_interval, emaL2_interval)
-    emaL3_value = ema_read(trading_pair, exchange_name, chart_interval, emaL3_interval)
-    # EMA value Short
-    emaS1_value = ema_read(trading_pair, exchange_name, chart_interval, emaS1_interval)
-    emaS2_value = ema_read(trading_pair, exchange_name, chart_interval, emaS2_interval)
-    emaS3_value = ema_read(trading_pair, exchange_name, chart_interval, emaS3_interval)
-    # EMA Crossover signal
-    if emaL1_value > emaL2_value and emaL1_value > emaL3_value:
-        ema_signal = 1
-    elif emaS1_value < emaS2_value and emaS1_value < emaS3_value:
-        ema_signal = -1
-    else:
-        ema_signal = 0
-    # RSI signal
-    rsi_signal = rsi_read(trading_pair, exchange_name, chart_interval, rsi_interval)
-    # WFC_signal
-    wfcL_value = wf_cofirmation(trading_pair, exchange_name, chart_interval, emaL3_interval) # Long
-    wfcS_value = wf_cofirmation(trading_pair, exchange_name, chart_interval, emaS3_interval) # Short
-    if wfcL_value == 1: # Long
-        wfc_signal = 1
-    elif wfcS_value == -1: # Short
-        wfc_signal = -1
-    else: # Do Nothing
-        wfc_signal = 0
+    try:
+        """GATHERING SIGNALS - W"""
+        # WF signal 
+        wf_signal = WF_read(trading_pair, exchange_name, chart_interval)
+        # EMA value Long
+        emaL1_value = ema_read(trading_pair, exchange_name, chart_interval, emaL1_interval)
+        emaL2_value = ema_read(trading_pair, exchange_name, chart_interval, emaL2_interval)
+        emaL3_value = ema_read(trading_pair, exchange_name, chart_interval, emaL3_interval)
+        # EMA value Short
+        emaS1_value = ema_read(trading_pair, exchange_name, chart_interval, emaS1_interval)
+        emaS2_value = ema_read(trading_pair, exchange_name, chart_interval, emaS2_interval)
+        emaS3_value = ema_read(trading_pair, exchange_name, chart_interval, emaS3_interval)
+        # EMA Crossover signal
+        if emaL1_value > emaL2_value and emaL1_value > emaL3_value:
+            ema_signal = 1
+        elif emaS1_value < emaS2_value and emaS1_value < emaS3_value:
+            ema_signal = -1
+        else:
+            ema_signal = 0
+        # RSI signal
+        rsi_signal = rsi_read(trading_pair, exchange_name, chart_interval, rsi_interval)
+        # WFC_signal
+        wfcL_value = wf_cofirmation(trading_pair, exchange_name, chart_interval, emaL3_interval) # Long
+        wfcS_value = wf_cofirmation(trading_pair, exchange_name, chart_interval, emaS3_interval) # Short
+        if wfcL_value == 1: # Long
+            wfc_signal = 1
+        elif wfcS_value == -1: # Short
+            wfc_signal = -1
+        else: # Do Nothing
+            wfc_signal = 0
 
-    total_signals = wf_signal + ema_signal + rsi_signal + wfc_signal
-    
-    """"""
-    # For testing
-    date_and_time = (datetime.now())
-    date = date_and_time.strftime("%m/%d/%Y, %H:%M:%S")
-    print(f"{date}: {total_signals}")# For testing
-    sleep(1)
-    """"""
-    
-    # COMBINED SIGNAL PROCESSING
-    if total_signals == 4: # Go long
-        return 1
-    elif total_signals == -4: # Go short
-        return -1
-    else: # Do nothing
-        return 0
+        total_signals = wf_signal + ema_signal + rsi_signal + wfc_signal
+        
+        """"""
+        # For testing
+        date_and_time = (datetime.now())
+        date = date_and_time.strftime("%m/%d/%Y, %H:%M:%S")
+        print(f"{date}: {total_signals}")# For testing
+        sleep(1)
+        """"""
+        
+        # COMBINED SIGNAL PROCESSING
+        if total_signals == 4: # Go long
+            return 1
+        elif total_signals == -4: # Go short
+            return -1
+        else: # Do nothing
+            return 0
+        
+    except Exception as e:
+        path.append("ZZ-General_Functions/Programs")
+        from Error_handling import Handling_Error
+        Handling_Error(e).No_Data_Table_Error(5) # Waits if the table of the file doesn't exist
+        return 0 # Do Nothing
 
 
 

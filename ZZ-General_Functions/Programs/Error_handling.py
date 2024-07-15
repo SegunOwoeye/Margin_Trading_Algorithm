@@ -10,10 +10,10 @@ class Handling_Error:
         self.Error = Error
 
     # No data table Error handling
-    def No_Data_Table_Error(self):
+    def No_Data_Table_Error(self, timer=30):
         if sqlite3.OperationalError == type(self.Error):
             # print("W")
-            sleep(30) # Wait 30 seconds so the program has enough time to have deleted the file which has the error
+            sleep(timer) # Wait 30 seconds so the program has enough time to have deleted the file which has the error
 
         else: pass
             #print("L")
