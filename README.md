@@ -11,6 +11,7 @@ Use the "Start_(Main).py" file in "0-Run" folder to run the trading Algorithm
 4. Run start program "python 0-Run/Start_(Main).py"
 
 ### Things to rememnber:
+- Program is Written in Python 3.8.5
 - Github doesn't store empty folders
 
 ## Copyright
