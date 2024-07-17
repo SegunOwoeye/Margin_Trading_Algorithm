@@ -186,7 +186,7 @@ def run(trading_pair, exchange_name, chart_interval, indicator_interval, db_name
 
 
 """TESTING"""
-print(RSI("BTCUSDT", "Binance", "5m", 6))
+#print(RSI("BTCUSDT", "Binance", "5m", 6))
 #run("BTCUSDT", "Binance", "5m", 14)
 #(run("BTCUSDT", "Binance", 1, 14, "RSI"))
 
