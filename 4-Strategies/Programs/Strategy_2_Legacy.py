@@ -224,14 +224,7 @@ def printTodatabase(trading_pair, exchange_name, chart_interval, emaL1_interval,
             date = date_and_time.strftime("%m/%d/%Y, %H:%M:%S") #[0] Date
             
             if abs(signal) == 1:
-                
-                """ SENDING EMAIL NOTIFICATION"""
-                path.append("YY_Notifications/Programs") 
-                from email_notification import email_alert 
-
-
-                
-
+            
                 """ SETUP ORDERBOOK """
                 # Side
                 if signal == 1:
@@ -263,17 +256,29 @@ def printTodatabase(trading_pair, exchange_name, chart_interval, emaL1_interval,
                 Account_Balance_Traded = tradeing_funds[1] 
                 # Timestamp Time
                 server_time = round(time(),0)
+                # Separate bairs
+                base_pair = calc_marker.pair_split()[1]
+                asset_pair = calc_marker.pair_split()[0]
 
+                # asset_name
+                if signal == 1: # Long
+                    asset_name = base_pair
+                elif signal == -1: # Short
+                    asset_name = asset_pair
+
+
+
+                """ SENDING EMAIL NOTIFICATION"""
+                path.append("YY_Notifications/Programs") 
+                from email_notification import email_alert 
+                subject = "Creating an Order"
+                message = f"A {side} order has been placed for {Equity} {asset_name}"
+                email_recipient = "aces.cryptotrading@gmail.com"
                 
                 
 
                 """ Sending Order Details to Orderbook """
 
-
-                """
-                To stop duplicate trades from occuring, check the orderbook to see if a recent trade 
-                for the current strategy has been made
-                """
                 # [1] Check if there's a recent trade for the current strategy
                 connection = sqlite3.connect(file_name)
                 cursor = connection.cursor()
@@ -302,7 +307,7 @@ def printTodatabase(trading_pair, exchange_name, chart_interval, emaL1_interval,
                     connection.commit()
                     connection.close() #Closing the database
                     # Send Email
-                    email_alert("Creating order", f"Order has signal: {signal} and will produce order in book", "aces.cryptotrading@gmail.com")
+                    email_alert(subject, message, email_recipient)
                 
                 # If an order for the same strategy has recently been placed
                 elif ((server_time-float(list_check[-1][1])) <= duplicate_time) and (list_check[-1][22] == Strategy_Name): # Wait and do nothing
@@ -318,7 +323,7 @@ def printTodatabase(trading_pair, exchange_name, chart_interval, emaL1_interval,
                     connection.commit()
                     connection.close()
                     # Send Email
-                    email_alert("Creating order", f"Order has signal: {signal} and will produce order in book", "aces.cryptotrading@gmail.com")
+                    email_alert(subject, message, email_recipient)
                 
 
 
