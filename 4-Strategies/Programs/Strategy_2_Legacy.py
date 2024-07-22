@@ -60,7 +60,7 @@ def WF_read(trading_pair, exchange_name, chart_interval):
     date = date_and_time.strftime("%b%d%y%H")
     file_name = f"2-DataProcessing/data_gathered/{trading_pair}_data/" + str(date) + exchange_name + trading_pair + "interval=" + str(chart_interval) + "WF_data.db"
     #print(file_name)
-    connection = sqlite3.connect(file_name)
+    connection = sqlite3.connect(file_name, timeout=10.0)
     cursor = connection.cursor()
     cursor.execute("Select * FROM processed_data")
     list_check = cursor.fetchall()
@@ -78,7 +78,7 @@ def ema_read(trading_pair, exchange_name, chart_interval, indicator_interval):
     date_and_time = (datetime.now())
     date = date_and_time.strftime("%b%d%y")
     file_name = f"2-DataProcessing/data_gathered/{trading_pair}_data/{str(date)}{exchange_name}{trading_pair}interval={str(chart_interval)}tick={indicator_interval}EMAdata.db"
-    connection = sqlite3.connect(file_name)
+    connection = sqlite3.connect(file_name, timeout=10.0)
     cursor = connection.cursor()
     cursor.execute("Select * FROM processed_data")
     list_check = cursor.fetchall()
@@ -96,7 +96,7 @@ def rsi_read(trading_pair, exchange_name, chart_interval, indicator_interval):
     date_and_time = (datetime.now())
     date = date_and_time.strftime("%b%d%y%H")
     file_name  = f"2-DataProcessing/data_gathered/{trading_pair}_data/{str(date)}{exchange_name}{trading_pair}interval={str(chart_interval)}tick={indicator_interval}RSIdata.db"
-    connection = sqlite3.connect(file_name)
+    connection = sqlite3.connect(file_name, timeout=10.0)
     cursor = connection.cursor()
     cursor.execute("Select * FROM processed_data")
     list_check = cursor.fetchall()
@@ -122,7 +122,7 @@ def wf_cofirmation(trading_pair, exchange_name, chart_interval, indicator_interv
     date = date_and_time.strftime("%b%d%y%H")
     file_name = (f"2-DataProcessing/data_gathered/{trading_pair}_data/{str(date)}{exchange_name}{trading_pair}interval="+
                  f"{str(chart_interval)}tick={indicator_interval}{db_name}data.db")
-    connection = sqlite3.connect(file_name)
+    connection = sqlite3.connect(file_name, timeout=10.0)
     cursor = connection.cursor()
     cursor.execute("Select * FROM processed_data")
     list_check = cursor.fetchall()
@@ -226,9 +226,9 @@ def printTodatabase(trading_pair, exchange_name, chart_interval, emaL1_interval,
             if abs(signal) == 1:
                 """ SETUP ORDERBOOK """
                 # Side
-                if signal > 0:
+                if signal == 1:
                     side = "LONG"
-                elif signal < 0:
+                elif signal == -1:
                     side = "SHORT"
                 #Setup Calculation Class
                 calc_marker = calculating_markers(trading_pair, exchange_name,chart_interval, flag, leverage, L_TP,
@@ -422,6 +422,8 @@ def run(trading_pair, exchange_name, chart_interval, emaL1_interval, emaL2_inter
 """ TESTING """
 #strategy("BTCUSDT", "Binance", "5m", 20, 50, 100, 15, 45, 90, 6)
 #creating_db_file("BTCUSDT", "Binance", 1)
+
+#printTodatabase("BTCUSDT", "Binance", "5m", 20, 50, 100, 15, 45, 90, 6, 3, 0.8, 0.5, 0.7, 1.0, 1, 50)
 
 #run("BTCUSDT", "Binance", "5m", 20, 50, 100, 15, 45, 90, 6, 3, 0.8, 0.5, 0.7, 1.0, 1, 50)
 
