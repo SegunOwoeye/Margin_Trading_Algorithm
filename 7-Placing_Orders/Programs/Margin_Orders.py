@@ -47,12 +47,15 @@ class order:
 
     # The amount of money that will be used to trade
     def get_equity(self):
-        usdt_equity = self.equity
+        if self.side == "LONG":
+            usdt_equity = self.equity
 
-        closeing_price = self.get_current_price()
-        asset_equity = usdt_equity/closeing_price
+            closeing_price = self.get_current_price()
+            asset_equity = usdt_equity/closeing_price
 
-        return self.round_sign_number(asset_equity) 
+            return self.round_sign_number(asset_equity) 
+        elif self.side == "SHORT":
+            return self.round_sign_number(self.equity) 
     
     # Places a market order
     def market_order(self):
