@@ -224,6 +224,15 @@ def printTodatabase(trading_pair, exchange_name, chart_interval, emaL1_interval,
             date = date_and_time.strftime("%m/%d/%Y, %H:%M:%S") #[0] Date
             
             if abs(signal) == 1:
+
+                """ SENDING EMAIL NOTIFICATION"""
+                path.append("YY_Notifications/Programs") 
+                from email_notification import email_alert
+
+                email_alert("Creating order", f"Order has signal: {signal} and will produce order in book", "aces.cryptotrading@gmail.com")
+
+
+
                 """ SETUP ORDERBOOK """
                 # Side
                 if signal == 1:
