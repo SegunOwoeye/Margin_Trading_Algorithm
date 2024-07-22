@@ -3,6 +3,7 @@ from sys import path
 
 path.append("Misc/Programs")
 from File_Monitoring_Legacy import run
+path.append("")
 
 
 # DataGathering
@@ -16,4 +17,4 @@ for i in range(len(trading_pairs)):
     path_list.append(file_path)
     
 
-run(path)
+run(path_list)

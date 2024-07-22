@@ -18,6 +18,6 @@ for i in range(len(trading_pairs)):
     path_list.append(historic_path)
     
 
-run(path)
+run(path_list)
 
 
