@@ -57,6 +57,9 @@ def printTodatabase(exchange_pair, exchange_name, interval, time, open_price, hi
 
     except Exception as e: #Message email that an error on... has occured
         print(f"1-DataGathering/Programs/{exchange_pair}/Live_Data/Data_Gathering_{exchange_name}_Live_{exchange_pair}_{interval}.py: " + str(e)) 
+        path.append("ZZ-General_Functions/Programs")
+        from Error_handling import Handling_Error
+        Handling_Error(e).No_Data_Table_Error(10)
 
 """
 2. CODE FOR GETTING ORDERBOOK DATA

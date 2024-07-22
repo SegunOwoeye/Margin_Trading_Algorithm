@@ -126,7 +126,10 @@ def printTodatabase(exchange_pair, exchange_name, interval, limit):
             printTodatabase(exchange_pair, exchange_name, interval, limit) # Runs program again
 
     except Exception as e: #Message email that an error on... has occured
-        print(f"Data_Gathering_{exchange_name}_{exchange_pair}.py: " + str(e))
+        print(f"{file_name}: {str(e)}")
+        path.append("ZZ-General_Functions/Programs")
+        from Error_handling import Handling_Error
+        Handling_Error(e).No_Data_Table_Error(10)
 
 
 #runs program in a loop
