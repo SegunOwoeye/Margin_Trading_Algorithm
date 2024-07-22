@@ -229,9 +229,8 @@ def printTodatabase(trading_pair, exchange_name, chart_interval, emaL1_interval,
                 path.append("YY_Notifications/Programs") 
                 from email_notification import email_alert 
 
-                email_alert("Creating order", f"Order has signal: {signal} and will produce order in book", "aces.cryptotrading@gmail.com")
-                
 
+                
 
                 """ SETUP ORDERBOOK """
                 # Side
@@ -302,6 +301,8 @@ def printTodatabase(trading_pair, exchange_name, chart_interval, emaL1_interval,
 
                     connection.commit()
                     connection.close() #Closing the database
+                    # Send Email
+                    email_alert("Creating order", f"Order has signal: {signal} and will produce order in book", "aces.cryptotrading@gmail.com")
                 
                 # If an order for the same strategy has recently been placed
                 elif ((server_time-float(list_check[-1][1])) <= duplicate_time) and (list_check[-1][22] == Strategy_Name): # Wait and do nothing
@@ -316,7 +317,9 @@ def printTodatabase(trading_pair, exchange_name, chart_interval, emaL1_interval,
 
                     connection.commit()
                     connection.close()
-                    
+                    # Send Email
+                    email_alert("Creating order", f"Order has signal: {signal} and will produce order in book", "aces.cryptotrading@gmail.com")
+                
 
 
 
