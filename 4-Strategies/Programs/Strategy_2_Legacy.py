@@ -12,10 +12,8 @@ import sqlite3
 from time import sleep, time
 from os.path import exists
 from sys import path
-
-# Special Imports
-path.append("4-Strategies/Programs") 
 from Trade_Order_Planning import pair_balance, calculating_markers
+
 
 
 
@@ -207,6 +205,8 @@ def printTodatabase(trading_pair, exchange_name, chart_interval, emaL1_interval,
     signal = strategy(trading_pair, exchange_name, chart_interval, emaL1_interval, emaL2_interval, emaL3_interval,
              emaS1_interval, emaS2_interval, emaS3_interval, rsi_interval)
     
+    #signal = -1
+    
     # Getting file name
     date_and_time_db = (datetime.now())
     date_db = date_and_time_db.strftime("%y")
@@ -224,13 +224,13 @@ def printTodatabase(trading_pair, exchange_name, chart_interval, emaL1_interval,
             date = date_and_time.strftime("%m/%d/%Y, %H:%M:%S") #[0] Date
             
             if abs(signal) == 1:
-
+                
                 """ SENDING EMAIL NOTIFICATION"""
                 path.append("YY_Notifications/Programs") 
-                from email_notification import email_alert
+                from email_notification import email_alert 
 
                 email_alert("Creating order", f"Order has signal: {signal} and will produce order in book", "aces.cryptotrading@gmail.com")
-
+                
 
 
                 """ SETUP ORDERBOOK """
@@ -239,6 +239,7 @@ def printTodatabase(trading_pair, exchange_name, chart_interval, emaL1_interval,
                     side = "LONG"
                 elif signal == -1:
                     side = "SHORT"
+                
                 #Setup Calculation Class
                 calc_marker = calculating_markers(trading_pair, exchange_name,chart_interval, flag, leverage, L_TP,
                                                S_TP,L_SL,S_SL, tradeable_fund_Percentage, side)
@@ -263,6 +264,8 @@ def printTodatabase(trading_pair, exchange_name, chart_interval, emaL1_interval,
                 Account_Balance_Traded = tradeing_funds[1] 
                 # Timestamp Time
                 server_time = round(time(),0)
+
+                
                 
 
                 """ Sending Order Details to Orderbook """

@@ -1,6 +1,7 @@
 from datetime import datetime
-from os import path
+from os.path import exists
 import sqlite3
+from sys import path
 from math import floor, log10
 
 # [5] Class for retrieving balance details
@@ -38,7 +39,7 @@ class pair_balance:
             #print(file_name)
             
             try:
-                if path.exists(file_name):
+                if exists(file_name):
                     connection = sqlite3.connect(file_name)
                     cursor = connection.cursor()
 
@@ -72,7 +73,7 @@ class pair_balance:
             #print(file_name)
             
             try:
-                if path.exists(file_name):
+                if exists(file_name):
                     connection = sqlite3.connect(file_name)
                     cursor = connection.cursor()
 
@@ -197,6 +198,7 @@ class calculating_markers:
         # Special conditioning
         elif self.side == "SHORT":
             closing_price = self.get_current_data()[4]
+            #print(closing_price)
             equity = (balance * (self.tradable_funds_percentage/100) * (self.leverage-1))/closing_price
             Account_balance_Traded = (balance * (self.tradable_funds_percentage/100))/closing_price
 
@@ -306,3 +308,5 @@ class calculating_markers:
 
 
 #print(calculating_markers("BTCUSDT", "Binance", "5m", 1, 3, 0.8, 0.5,0.7, 1.0, 50, "LONG").get_stop_limit_price())
+
+#print(calculating_markers("BTCUSDT", "Binance", "5m", 1, 3, 0.8, 0.5,0.7, 1.0, 50, "SHORT").tradable_funds())
