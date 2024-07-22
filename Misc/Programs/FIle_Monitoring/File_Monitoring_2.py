@@ -3,7 +3,6 @@ from sys import path
 
 path.append("Misc/Programs")
 from File_Monitoring_Legacy import run
-path.append("")
 
 
 # DataGathering
