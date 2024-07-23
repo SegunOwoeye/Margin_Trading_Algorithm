@@ -163,6 +163,7 @@ def data_gathering(trading_pair, chart_interval, bt_days, limit):
         df.to_csv(file_name, mode='a', header=False ,index=True)
 
 
+# Custom
 def get_signals(trading_pair, chart_interval, rsi_window, ema1_window, ema2_window, 
                 ema3_window, hm_spaceing, metric):
     
@@ -194,7 +195,7 @@ def get_signals(trading_pair, chart_interval, rsi_window, ema1_window, ema2_wind
 
 
 
-
+# Custom
 def bt_strategy2(trading_pair, chart_interval, short_rsi_window, short_ema1_window, short_ema2_window, 
                 short_ema3_window, long_rsi_window, long_ema1_window, long_ema2_window, 
                 long_ema3_window, hm_spaceing, metric, flag=None):

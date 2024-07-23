@@ -220,8 +220,17 @@ class order_Monitoring:
         connection.commit() 
         connection.close()
 
+
+        """ SENDING EMAIL NOTIFICATION"""
+        sys.path.append("YY_Notifications/Programs") 
+        from email_notification import email_alert 
+        subject = f"Closing {self.trading_pair} Order Made at {update_ID[0]}"
+        message = (f"The order was closed at {exit_price} USDT achieving a percentage change of {perc_change}")
+        email_recipient = "aces.cryptotrading@gmail.com"
+        # Send Email
+        email_alert(subject, message, email_recipient)
+
                 
-    
 '''        
 
 """ TESTING """
