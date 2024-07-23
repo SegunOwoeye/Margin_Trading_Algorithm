@@ -272,7 +272,8 @@ def printTodatabase(trading_pair, exchange_name, chart_interval, emaL1_interval,
                 path.append("YY_Notifications/Programs") 
                 from email_notification import email_alert 
                 subject = "Creating an Order"
-                message = f"A {side} order has been placed for {Equity} {asset_name}"
+                message = (f"A {side} {Order_type} order has been placed for {Equity} {asset_name} on a {Leverage}x Leverage using {Account_Balance_Traded} {base_pair} with a " + 
+                           f"target price of {Target_Price} {base_pair}")
                 email_recipient = "aces.cryptotrading@gmail.com"
                 
                 
