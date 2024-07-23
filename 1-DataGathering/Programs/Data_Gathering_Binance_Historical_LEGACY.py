@@ -129,7 +129,7 @@ def printTodatabase(exchange_pair, exchange_name, interval, limit):
         print(f"{file_name}: {str(e)}")
         path.append("ZZ-General_Functions/Programs")
         from Error_handling import Handling_Error
-        Handling_Error(e).No_Data_Table_Error(10)
+        Handling_Error(e).No_Data_Table_Error(1)
 
 
 #runs program in a loop
