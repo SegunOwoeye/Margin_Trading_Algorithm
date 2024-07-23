@@ -189,7 +189,7 @@ def run(trading_pair, exchange_name, chart_interval, indicator_interval):
             
             # [3] Waits 1 seconds if the required filenames don't exist
             else:
-                time.sleep(1)
+                time.sleep(5)
                 #print("No Files yet")
 
         except Exception as e:
