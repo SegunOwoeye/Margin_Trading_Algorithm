@@ -3,6 +3,7 @@ from requests import get
 from os.path import exists
 import sqlite3
 import time 
+from sys import path
 
 class asset_precision:
     #Initialises variables for use through the class
@@ -52,8 +53,8 @@ class asset_precision:
     def get_data(self): # WORKING
         # Precision is the total amount of Asset significant figures that can be present in the orderQTy field
         host = 'https://api.binance.com'
-        path = f"/api/v3/exchangeInfo?symbol={self.trading_pair}"
-        url = host + path
+        path_name = f"/api/v3/exchangeInfo?symbol={self.trading_pair}"
+        url = host + path_name
         
         # make a GET request to the endpoint
         response = get(url) # response = get(url, headers = headers)
@@ -97,6 +98,9 @@ class asset_precision:
 
         except Exception as e: #Message email that an error on... has occured
             print(f"5-Trade_Monitoring/Programs/{self.trading_pair}/asset_precision_{self.trading_pair}.py has error: " + str(e))
+            path.append("ZZ-General_Functions/Programs")
+            from Error_handling import Handling_Error
+            Handling_Error(e).No_Data_Table_Error()
 
 #5-Trade_Monitoring\asset_precision_Legacy.py
 
@@ -107,6 +111,9 @@ def run(trading_pair):
             time.sleep(1)
         except Exception as e:
             print(f"5-Trade_Monitoring/Programs/{trading_pair}/asset_precision_{trading_pair}.py has error: " + str(e))
+            path.append("ZZ-General_Functions/Programs")
+            from Error_handling import Handling_Error
+            Handling_Error(e).No_Data_Table_Error()
 
 # TESTING
 
