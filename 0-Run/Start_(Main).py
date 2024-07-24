@@ -167,6 +167,8 @@ def data_processing_file_lists():
     for i in range(sections_monitored):
         program_name = f"Misc/Programs/FIle_Monitoring/File_Monitoring_{i+1}.py"
         run_File_Monitoring.append(program_name)
+    additional_program_name = "Misc/Programs/FIle_Monitoring/File_Monitoring_5.py"
+    run_File_Monitoring.append(additional_program_name)
     
     """program_list = (run_atr_programs + run_GARCH_programs + run_mr_programs + run_SMA_programs + run_EMA_programs + run_WF_programs 
                     + run_RSI_programs + run_WFC_programs)"""
