@@ -40,7 +40,7 @@ def Suspend_programs(interval="1h", wait=10, tolerance=3):
         if abs(60*60*24-wait_time) >= 60*60*24-tolerance:
             time.sleep(wait)
 
-    print(wait_time)
+    #print(wait_time)
 
     
 """ TESTING """
