@@ -6,7 +6,7 @@ from time import sleep
 
 
 #CREATES A DATABASE FILE - WORKING
-def creating_db_file(trading_pair, exchange_name, chart_interval, indicator_interval, db_name = "SMA"):    
+def creating_db_file(trading_pair, exchange_name, chart_interval, indicator_interval, db_name = "KF"):    
     date_and_time = (datetime.now())
     date = date_and_time.strftime("%b%d%y%H")
     ###BELOW NEEDS TO BE EDITED
