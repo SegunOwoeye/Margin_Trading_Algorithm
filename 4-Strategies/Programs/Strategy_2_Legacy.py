@@ -200,6 +200,7 @@ def printTodatabase(trading_pair, exchange_name, chart_interval, emaL1_interval,
              emaS1_interval, emaS2_interval, emaS3_interval, rsi_interval, leverage, L_TP, S_TP, 
              L_SL, S_SL, flag, tradeable_fund_Percentage, db_name = "Strategy2_Orders",
              Strategy_Name = "Strategy_2"):
+    Strategy_Name = f"{Strategy_Name}{chart_interval}"
     
     # Getting the Signal
     signal = strategy(trading_pair, exchange_name, chart_interval, emaL1_interval, emaL2_interval, emaL3_interval,
@@ -355,7 +356,7 @@ def run(trading_pair, exchange_name, chart_interval, emaL1_interval, emaL2_inter
             path.append("ZZ-General_Functions/Programs")
             from Suspend_programs import Suspend_programs
             Suspend_programs()
-            
+
             """ CHECKS TO SEE IF THE REQUIRED FILES ARE PRESENT, IF NOT IT WAITS"""
             # [1] Gets required filenames
             date_and_time = (datetime.now())
