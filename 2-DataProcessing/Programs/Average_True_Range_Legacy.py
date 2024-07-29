@@ -176,6 +176,10 @@ def run(trading_pair, exchange_name, chart_interval, indicator_interval):
     
     while 1:
         try:
+            # Checks to see if program should be suspended before running due to overlap error
+            path.append("ZZ-General_Functions/Programs")
+            from Suspend_programs import Suspend_programs
+            Suspend_programs()
             
             """ CHECKS TO SEE IF THE REQUIRED FILES ARE PRESENT, IF NOT IT WAITS"""
             # Gets required filenames
@@ -203,6 +207,7 @@ def run(trading_pair, exchange_name, chart_interval, indicator_interval):
             # Waits 1 seconds if the required filenames don't exist
             else:
                 sleep(1)
+
 
         except Exception as e:
             print(f"2-DataProcessing/Programs/{trading_pair}/Average_True_Range_{trading_pair}interval={chart_interval}.py has error: " + str(e))

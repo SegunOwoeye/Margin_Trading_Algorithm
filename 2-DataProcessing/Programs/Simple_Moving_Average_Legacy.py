@@ -126,6 +126,11 @@ def run(trading_pair, exchange_name, chart_interval, indicator_interval, db_name
     while 1:
         
         try: 
+            # Checks to see if program should be suspended before running due to overlap error
+            path.append("ZZ-General_Functions/Programs")
+            from Suspend_programs import Suspend_programs
+            Suspend_programs()
+            
             """ CHECKS TO SEE IF THE REQUIRED FILES ARE PRESENT, IF NOT IT WAITS"""
             # [1] Gets required filenames
             date_and_time = (datetime.now())
