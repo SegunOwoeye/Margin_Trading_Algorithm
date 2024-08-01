@@ -71,6 +71,7 @@ class order:
             "stopLimitPrice": self.Stop_limit,
             "sideEffectType": "MARGIN_BUY",
             "stopLimitTimeInForce": "GTC",
+            "sideEffectType": "AUTO_REPAY",
             "timestamp": int(round(time() * 1000, 0))
 
         }
