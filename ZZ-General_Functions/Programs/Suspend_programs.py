@@ -8,7 +8,7 @@ THIS PROGRAM IS MEANT TO DO THE FOLLOWING:
 import time
 
 # Main function
-def Suspend_programs(interval="1h", wait=10, tolerance=3):
+def Suspend_programs(interval="1h", wait=10, tolerance=5):
     c_time = time.localtime()
     hour_past = c_time.tm_hour
     minutes_past = c_time.tm_min
