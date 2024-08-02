@@ -4,7 +4,7 @@ import websocket
 import rel
 
 from datetime import datetime
-from os import path
+from os import path, remove
 import sqlite3
 from time import time
 from json import loads
@@ -60,6 +60,9 @@ def printTodatabase(exchange_pair, exchange_name, interval, time, open_price, hi
         path.append("ZZ-General_Functions/Programs")
         from Error_handling import Handling_Error
         Handling_Error(e).No_Data_Table_Error(1)
+        if len(file_name) == 0:
+
+            remove(file_name)
 
 """
 2. CODE FOR GETTING ORDERBOOK DATA
