@@ -164,6 +164,9 @@ def printTodatabase(trading_pair, exchange_name, chart_interval, indicator_inter
         
         else: #Creates new db file
             creating_db_file(trading_pair, exchange_name, chart_interval, indicator_interval, db_name) #Creates new file
+            path.append("ZZ-General_Functions/Programs")
+            from Error_handling import Handling_Error
+            Handling_Error(e).No_Data_Table_Error()
 
     except Exception as e: #Message email that an error on... has occured
         print(f"2-DataProcessing/Programs/{trading_pair}/Exponential_Moving_Average_{trading_pair}interval={str(chart_interval)}tick={indicator_interval}.py has error: " + str(e))

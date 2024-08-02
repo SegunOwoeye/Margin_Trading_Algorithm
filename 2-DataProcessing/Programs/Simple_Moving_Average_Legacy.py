@@ -120,6 +120,9 @@ def printTodatabase(trading_pair, exchange_name, chart_interval, indicator_inter
 
     except Exception as e: #Message email that an error on... has occured
         print(f"2-DataProcessing/Programs/{trading_pair}/{db_name}_{trading_pair}interval={chart_interval}.py has error: " + str(e))
+        path.append("ZZ-General_Functions/Programs")
+        from Error_handling import Handling_Error
+        Handling_Error(e).No_Data_Table_Error()
 
 
 def run(trading_pair, exchange_name, chart_interval, indicator_interval, db_name = "SMA"):
