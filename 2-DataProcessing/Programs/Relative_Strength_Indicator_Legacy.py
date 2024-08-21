@@ -162,7 +162,7 @@ def run(trading_pair, exchange_name, chart_interval, indicator_interval, db_name
             # Checks to see if program should be suspended before running due to overlap error
             path.append("ZZ-General_Functions/Programs")
             from Suspend_programs import Suspend_programs
-            Suspend_programs()
+            Suspend_programs(interval=chart_interval)
 
             
             """ CHECKS TO SEE IF THE REQUIRED FILES ARE PRESENT, IF NOT IT WAITS"""
