@@ -45,8 +45,8 @@ def Suspend_programs(interval="1h", wait=10, tolerance=5):
     
 """ TESTING """
 
-'''while 1:
+"""while 1:
 
 
     Suspend_programs(interval="1m")
-    time.sleep(1)'''
+    time.sleep(1)"""
