@@ -116,8 +116,8 @@ def run(trading_pair):
             asset_precision(trading_pair).printTodatabase()
             time.sleep(1)
         except Exception as e:
-            program_name = f"5-Trade_Monitoring/Programs/{trading_pair}/asset_precision_{trading_pair}.py"
             # RECORDING ERROR
+            program_name = f"5-Trade_Monitoring/Programs/{trading_pair}/asset_precision_{trading_pair}.py"
             path.append("00-Run_Log/Programs")
             from Log_Output import Record_Output
             Record_Output(trading_pair, "Binance", e, program_name)

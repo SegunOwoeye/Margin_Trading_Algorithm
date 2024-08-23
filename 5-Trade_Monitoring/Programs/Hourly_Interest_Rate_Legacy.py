@@ -98,7 +98,7 @@ class Hourly_Interest_Rates:
                 Hourly_Interest_Rates(self.trading_pair).creating_db_file() #Creates new file
 
         except Exception as e: 
-            program_name = f"5-Trade_Monitoring/Programs/{self.trading_pair}/asset_precision_{self.trading_pair}.py"
+            program_name = f"5-Trade_Monitoring/Programs/{self.trading_pair}/hHourly_Interest_Rate_{self.trading_pair}.py"
             path.append("00-Run_Log/Programs")
             from Log_Output import Record_Output
             Record_Output(self.trading_pair, "Binance", e, program_name)
@@ -111,7 +111,7 @@ def run(trading_pair):
             Hourly_Interest_Rates(trading_pair).printTodatabase()
             time.sleep(1)
         except Exception as e:
-            program_name = f"5-Trade_Monitoring/Programs/{trading_pair}/asset_precision_{trading_pair}.py"
+            program_name = f"5-Trade_Monitoring/Programs/{trading_pair}/hHourly_Interest_Rate_{trading_pair}.py"
             path.append("00-Run_Log/Programs")
             from Log_Output import Record_Output
             Record_Output(trading_pair, "Binance", e, program_name)
