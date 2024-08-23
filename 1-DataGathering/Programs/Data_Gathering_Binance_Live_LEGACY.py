@@ -43,6 +43,7 @@ def printTodatabase(exchange_pair, exchange_name, interval, time, open_price, hi
     date_and_time = (datetime.now())
     date = date_and_time.strftime("%b%d%y%H")
     file_name = f"1-DataGathering/data_gathered/{trading_pair}_data/Live_Data/" + str(date) + exchange_name + exchange_pair + "interval=" + str(interval) + "kline_data.db"
+    program_name = f"1-DataGathering/Programs/{trading_pair}/Live_Data/Data_Gathering_{exchange_name}_Live_{trading_pair}_interval={interval}.py"
     try:
         #Checks to see if there's an existing db file inside the data gathering dircetory
         if exists(file_name) == True:
@@ -60,7 +61,7 @@ def printTodatabase(exchange_pair, exchange_name, interval, time, open_price, hi
         # RECORDING ERROR
         path.append("00-Run_Log/Programs")
         from Log_Output import Record_Output
-        Record_Output(exchange_pair, exchange_name, e, file_name)
+        Record_Output(exchange_pair, exchange_name, e, program_name)
         
         # HANDLING NO DATA TABLE ERROR
         path.append("ZZ-General_Functions/Programs")

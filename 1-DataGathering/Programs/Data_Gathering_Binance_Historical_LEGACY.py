@@ -1,6 +1,7 @@
 from datetime import datetime
 from requests import get
-from os import path
+from os.path import exists
+from sys import path
 import sqlite3
 
 
@@ -94,10 +95,11 @@ def printTodatabase(exchange_pair, exchange_name, interval, limit):
     date_and_time = (datetime.now())
     date = date_and_time.strftime("%b%d%y") #date_and_time.strftime("%b%d%y%H")
     file_name = f"1-DataGathering/data_gathered/{trading_pair}_data/Historical_Klines/" + str(date) + exchange_name + exchange_pair + "interval=" + str(interval) + "kline_data.db"
-  
+    program_name = f"1-DataGathering/Programs/{trading_pair}/Historical_Klines/Data_Gathering_{exchange_name}_Historical_{trading_pair}_interval={interval}.py"
+
     try:
         #Checks to see if there's an existing db file inside the data gathering dircetory
-        if path.exists(file_name) == True:
+        if exists(file_name) == True:
             timestamp_log = time_stamp_collection(exchange_pair, exchange_name, interval) #Gets time interval data
             
             #CHECKS TO SEE IF THE TIMESTAMP ALREADY EXISTS WITHIN THE DATABASE FILE
@@ -120,13 +122,17 @@ def printTodatabase(exchange_pair, exchange_name, interval, limit):
                         {historical_klines[i][3]}, {historical_klines[i][4]}, {historical_klines[i][5]})""")
                     connection.commit()
                     connection.close() #Closing the database
-        
+            s
         else: #Creates new db file
             creating_db_file(exchange_pair, exchange_name, interval) #Creates new file
-            printTodatabase(exchange_pair, exchange_name, interval, limit) # Runs program again
 
-    except Exception as e: #Message email that an error on... has occured
-        print(f"{file_name}: {str(e)}")
+    except Exception as e: 
+        # RECORDING ERROR
+        path.append("00-Run_Log/Programs")
+        from Log_Output import Record_Output
+        Record_Output(exchange_pair, exchange_name, e, program_name)
+        
+        # HANDLING NO DATA TABLE ERROR
         path.append("ZZ-General_Functions/Programs")
         from Error_handling import Handling_Error
         Handling_Error(e).No_Data_Table_Error(1)

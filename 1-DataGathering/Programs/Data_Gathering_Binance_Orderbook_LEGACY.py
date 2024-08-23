@@ -35,6 +35,7 @@ def printTodatabase(exchange_pair, exchange_name, depth):
     date = date_and_time.strftime("%b%d%y%H")
     #file_name = f"1-DataGathering/data_gathered/{trading_pair}_data/Live_Data/" + str(date) + exchange_name + exchange_pair + "interval=" + str(interval) + "depth_data.db"
     file_name = f"1-DataGathering/data_gathered/{trading_pair}_data/Live_Data/" + str(date) + exchange_name + exchange_pair + "orderbook.txt"
+    program_name = f"1-DataGathering/Programs/{trading_pair}/Live_Data/Data_Gathering_{exchange_name}_{trading_pair}_Orderbook.py"
     try:
         #Checks to see if there's an existing db file inside the data gathering dircetory
         if exists(file_name) == True:
@@ -55,8 +56,7 @@ def printTodatabase(exchange_pair, exchange_name, depth):
         # RECORDING ERROR
         path.append("00-Run_Log/Programs")
         from Log_Output import Record_Output
-        Record_Output(exchange_pair, exchange_name, e, file_name)
-        sleep(1)
+        Record_Output(exchange_pair, exchange_name, e, program_name)
 
 """
 2. CODE FOR GETTING ORDERBOOK DATA

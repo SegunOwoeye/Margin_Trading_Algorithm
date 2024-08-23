@@ -2,6 +2,7 @@
 
 from datetime import datetime
 from os import path
+from time import sleep
 
 
 """
@@ -19,7 +20,7 @@ def creating_db_file(exchange_pair, exchange_name):
     f = open(file_name, "w")
 
 
-def Record_Output(exchange_pair, exchange_name, Message: str, program_name: str = ""):
+def Record_Output(exchange_pair, exchange_name, Message: str, program_name: str = "", wait_time: int = 1):
     date_and_time = (datetime.now())
     date = date_and_time.strftime("%b%d%y%H")
     record_time = date_and_time.strftime("%H:%M:%S")
@@ -31,6 +32,7 @@ def Record_Output(exchange_pair, exchange_name, Message: str, program_name: str 
             #Text file database
             f = open(file_name, "a")
             f.write(f"{record_time} | {program_name}: {(Message)} \n")
+            sleep(wait_time)
 
         else: #Creates new db file
             creating_db_file(exchange_pair, exchange_name) #Creates new file
