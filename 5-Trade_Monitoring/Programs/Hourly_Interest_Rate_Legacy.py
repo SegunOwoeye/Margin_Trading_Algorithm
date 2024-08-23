@@ -50,7 +50,7 @@ class Hourly_Interest_Rates:
         
         pair1 = self.pair_split()[0]
         path.append("Misc/Programs")
-        from Binance_Rest_Api import run
+        from Binance_Rest_Api import run as run_api
         
 
         #FOR HIR
@@ -62,8 +62,7 @@ class Hourly_Interest_Rates:
         method = "GET"
         net_path = "/sapi/v1/margin/next-hourly-interest-rate"
         r_type = 0
-
-        return run(method, net_path, params, r_type)[0]['nextHourlyInterestRate']
+        return run_api(method, net_path, params, r_type)[0]['nextHourlyInterestRate']
 
     def printTodatabase(self):
         # Getting precision data
@@ -73,36 +72,31 @@ class Hourly_Interest_Rates:
         date_and_time = (datetime.now())
         date = date_and_time.strftime("%b%d%y") # 5-Trade_Monitoring\data_gathered\BTCUSDT_data
         file_name = f"5-Trade_Monitoring/data_gathered/{self.trading_pair}_data/{date}{self.trading_pair}HIR_data.db"
-        try:
-            #Checks to see if there's an existing db file inside the data gathering dircetory
-            if exists(file_name) == True:
-                # Sleep intervals
-                wait_time = 60*60 # 1 hour
+        
+        #Checks to see if there's an existing db file inside the data gathering dircetory
+        if exists(file_name) == True:
+            # Sleep intervals
+            wait_time = 60*60 # 1 hour
 
-                #Checks to see if program returns anything
-                connection = sqlite3.connect(file_name)
-                cursor = connection.cursor()
+            #Checks to see if program returns anything
+            connection = sqlite3.connect(file_name)
+            cursor = connection.cursor()
 
-                current_time = (datetime.now())
-                formatted_time = str(current_time.strftime('"%H:%M:%S"'))
-                cursor.execute(f"""INSERT INTO HIR_Data (time, HIR) VALUES 
-                               ({formatted_time}, {hir})""")
+            current_time = (datetime.now())
+            formatted_time = str(current_time.strftime('"%H:%M:%S"'))
+            cursor.execute(f"""INSERT INTO HIR_Data (time, HIR) VALUES 
+                            ({formatted_time}, {hir})""")
 
-                connection.commit()
-                connection.close() #Closing the database
-                
-
-                time.sleep(wait_time) #RUNS THE PROGRAM EVERY INTERVAL PERIOD
+            connection.commit()
+            connection.close() #Closing the database
             
-            else: #Creates new db file
-                Hourly_Interest_Rates(self.trading_pair).creating_db_file() #Creates new file
 
-        except Exception as e: 
-            program_name = f"5-Trade_Monitoring/Programs/{self.trading_pair}/Hourly_Interest_Rate_{self.trading_pair}.py"
-            path.append("00-Run_Log/Programs")
-            from Log_Output import Record_Output
-            Record_Output(self.trading_pair, "Binance", e, program_name)
+            time.sleep(wait_time) #RUNS THE PROGRAM EVERY INTERVAL PERIOD
+        
+        else: #Creates new db file
+            Hourly_Interest_Rates(self.trading_pair).creating_db_file() #Creates new file
 
+        
 #5-Trade_Monitoring\asset_precision_Legacy.py
 
 def run(trading_pair):
@@ -115,7 +109,7 @@ def run(trading_pair):
             path.append("00-Run_Log/Programs")
             from Log_Output import Record_Output
             Record_Output(trading_pair, "Binance", e, program_name)
-    
+        
 
 # TESTING
 
