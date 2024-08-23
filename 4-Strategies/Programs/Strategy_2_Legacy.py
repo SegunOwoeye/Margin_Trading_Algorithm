@@ -172,9 +172,11 @@ def strategy(trading_pair, exchange_name, chart_interval, emaL1_interval, emaL2_
         
         """"""
         # For testing
-        date_and_time = (datetime.now())
-        date = date_and_time.strftime("%m/%d/%Y, %H:%M:%S")
-        print(f"{date}: {total_signals}")# For testing
+        message = f"{total_signals}"# For testing
+        # RECORDING ERROR
+        path.append("00-Run_Log/Programs")
+        from Log_Output import Record_Output
+        Record_Output(trading_pair, exchange_name, message, program_name)
         sleep(1)
         """"""
         
