@@ -4,9 +4,10 @@ import websocket
 import rel
 
 from datetime import datetime
-from os import path
+from os.path import exists
+from sys import path
 import sqlite3
-from time import time
+from time import time, sleep
 from json import loads, dumps
 from functools import partial
 
@@ -36,7 +37,7 @@ def printTodatabase(exchange_pair, exchange_name, depth):
     file_name = f"1-DataGathering/data_gathered/{trading_pair}_data/Live_Data/" + str(date) + exchange_name + exchange_pair + "orderbook.txt"
     try:
         #Checks to see if there's an existing db file inside the data gathering dircetory
-        if path.exists(file_name) == True:
+        if exists(file_name) == True:
             #Defining Connection and cursor
             '''connection = sqlite3.connect(file_name)
             cursor = connection.cursor()
@@ -47,12 +48,15 @@ def printTodatabase(exchange_pair, exchange_name, depth):
             #Text file database
             f = open(file_name, "a")
             f.write(depth + "\n")
-
         else: #Creates new db file
             creating_db_file(exchange_pair, exchange_name) #Creates new file
 
-    except Exception as e: #Message email that an error on... has occured
-        print(f"Data_Gathering_{exchange_name}_{exchange_pair}.py: " + str(e))
+    except Exception as e: 
+        # RECORDING ERROR
+        path.append("00-Run_Log/Programs")
+        from Log_Output import Record_Output
+        Record_Output(exchange_pair, exchange_name, e, file_name)
+        sleep(1)
 
 """
 2. CODE FOR GETTING ORDERBOOK DATA
