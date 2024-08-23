@@ -19,9 +19,10 @@ def creating_db_file(exchange_pair, exchange_name):
     f = open(file_name, "w")
 
 
-def Record_Output(exchange_pair, exchange_name, Message: str):
+def Record_Output(exchange_pair, exchange_name, Message: str, program_name: str = ""):
     date_and_time = (datetime.now())
     date = date_and_time.strftime("%b%d%y%H")
+    record_time = date_and_time.strftime("%H:%M:%S")
     file_name = f"00-Run_Log/data_gathered/" + str(date) + exchange_name + exchange_pair + "LOG.txt"
     try:
         #Checks to see if there's an existing db file inside the data gathering dircetory
@@ -29,7 +30,7 @@ def Record_Output(exchange_pair, exchange_name, Message: str):
             
             #Text file database
             f = open(file_name, "a")
-            f.write(str(Message) + "\n")
+            f.write(f"{record_time} | {program_name}: {(Message)} \n")
 
         else: #Creates new db file
             creating_db_file(exchange_pair, exchange_name) #Creates new file
