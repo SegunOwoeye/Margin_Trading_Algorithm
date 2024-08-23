@@ -174,6 +174,7 @@ def strategy(trading_pair, exchange_name, chart_interval, emaL1_interval, emaL2_
         # For testing
         message = f"{total_signals}"# For testing
         # RECORDING ERROR
+        program_name = f"4-Strategies/Programs/{trading_pair}/Strategy_2_{trading_pair}interval={str(chart_interval)}.py"
         path.append("00-Run_Log/Programs")
         from Log_Output import Record_Output
         Record_Output(trading_pair, exchange_name, message, program_name)
