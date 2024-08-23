@@ -157,7 +157,13 @@ def run(trading_pair, exchange_name, flag, chart_interval, db_name):
                 time.sleep(1)
 
         except Exception as e:
-            print(f"5-Trade_Monitoring/Programs/{trading_pair}/Orderbook_Monitoring_{trading_pair}Interval={chart_interval}.py has error: " + str(e))
+            # RECORDING ERROR
+            program_name = f"5-Trade_Monitoring/Programs/{trading_pair}/Orderbook_Monitoring_{trading_pair}Interval={chart_interval}.py"
+            path.append("00-Run_Log/Programs")
+            from Log_Output import Record_Output
+            Record_Output(trading_pair, exchange_name, e, program_name)
+
+            # HANDLING NO DATA TABLE ERROR
             path.append("ZZ-General_Functions/Programs")
             from Error_handling import Handling_Error
             Handling_Error(e).No_Data_Table_Error()

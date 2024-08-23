@@ -2,7 +2,7 @@ from datetime import datetime
 from os.path import exists
 import sqlite3
 import time 
-import sys 
+from sys import path
 
 class Hourly_Interest_Rates:
     #Initialises variables for use through the class
@@ -49,7 +49,7 @@ class Hourly_Interest_Rates:
     def get_data(self): # WORKING
         
         pair1 = self.pair_split()[0]
-        sys.path.append("Misc/Programs")
+        path.append("Misc/Programs")
         from Binance_Rest_Api import run
         
 
@@ -97,8 +97,11 @@ class Hourly_Interest_Rates:
             else: #Creates new db file
                 Hourly_Interest_Rates(self.trading_pair).creating_db_file() #Creates new file
 
-        except Exception as e: #Message email that an error on... has occured
-            print(f"5-Trade_Monitoring/Programs/{self.trading_pair}/Hourly_Interest_Rate_{self.trading_pair}.py has error: " + str(e))
+        except Exception as e: 
+            program_name = f"5-Trade_Monitoring/Programs/{self.trading_pair}/asset_precision_{self.trading_pair}.py"
+            path.append("00-Run_Log/Programs")
+            from Log_Output import Record_Output
+            Record_Output(self.trading_pair, "Binance", e, program_name)
 
 #5-Trade_Monitoring\asset_precision_Legacy.py
 
@@ -108,7 +111,11 @@ def run(trading_pair):
             Hourly_Interest_Rates(trading_pair).printTodatabase()
             time.sleep(1)
         except Exception as e:
-            print(f"5-Trade_Monitoring/Programs/{trading_pair}/asset_precision_{trading_pair}.py has error: " + str(e))
+            program_name = f"5-Trade_Monitoring/Programs/{trading_pair}/asset_precision_{trading_pair}.py"
+            path.append("00-Run_Log/Programs")
+            from Log_Output import Record_Output
+            Record_Output(trading_pair, "Binance", e, program_name)
+    
 
 # TESTING
 

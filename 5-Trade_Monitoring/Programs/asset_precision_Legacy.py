@@ -96,8 +96,14 @@ class asset_precision:
             else: #Creates new db file
                 asset_precision(self.trading_pair).creating_db_file() #Creates new file
 
-        except Exception as e: #Message email that an error on... has occured
-            print(f"5-Trade_Monitoring/Programs/{self.trading_pair}/asset_precision_{self.trading_pair}.py has error: " + str(e))
+        except Exception as e: 
+            program_name = f"5-Trade_Monitoring/Programs/{self.trading_pair}/asset_precision_{self.trading_pair}.py"
+            # RECORDING ERROR
+            path.append("00-Run_Log/Programs")
+            from Log_Output import Record_Output
+            Record_Output(self.trading_pair, "Binance", e, program_name)
+            
+            # HANDLING NO DATA TABLE ERROR
             path.append("ZZ-General_Functions/Programs")
             from Error_handling import Handling_Error
             Handling_Error(e).No_Data_Table_Error()
@@ -110,7 +116,13 @@ def run(trading_pair):
             asset_precision(trading_pair).printTodatabase()
             time.sleep(1)
         except Exception as e:
-            print(f"5-Trade_Monitoring/Programs/{trading_pair}/asset_precision_{trading_pair}.py has error: " + str(e))
+            program_name = f"5-Trade_Monitoring/Programs/{trading_pair}/asset_precision_{trading_pair}.py"
+            # RECORDING ERROR
+            path.append("00-Run_Log/Programs")
+            from Log_Output import Record_Output
+            Record_Output(trading_pair, "Binance", e, program_name)
+            
+            # HANDLING NO DATA TABLE ERROR
             path.append("ZZ-General_Functions/Programs")
             from Error_handling import Handling_Error
             Handling_Error(e).No_Data_Table_Error()

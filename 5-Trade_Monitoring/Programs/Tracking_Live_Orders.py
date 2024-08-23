@@ -1,7 +1,7 @@
 from datetime import datetime
 import sqlite3
 from time import time
-import sys
+from sys import path
 from os.path import exists
 
 
@@ -222,7 +222,7 @@ class order_Monitoring:
 
 
         """ SENDING EMAIL NOTIFICATION"""
-        sys.path.append("YY_Notifications/Programs") 
+        path.append("YY_Notifications/Programs") 
         from email_notification import email_alert 
         subject = f"Closing {self.trading_pair} Order Made at {update_ID[0]}"
         message = (f"The order was closed at {exit_price} USDT achieving a percentage change of {perc_change}")

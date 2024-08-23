@@ -187,6 +187,12 @@ def strategy(trading_pair, exchange_name, chart_interval, emaL1_interval, emaL2_
             return 0
         
     except Exception as e:
+        program_name = f"4-Strategies/Programs/{trading_pair}/Strategy_2_{trading_pair}interval={str(chart_interval)}.py"
+        # RECORDING ERROR
+        path.append("00-Run_Log/Programs")
+        from Log_Output import Record_Output
+        Record_Output(trading_pair, exchange_name, e, program_name)
+
         path.append("ZZ-General_Functions/Programs")
         from Error_handling import Handling_Error
         Handling_Error(e).No_Data_Table_Error(5) # Waits if the table of the file doesn't exist
@@ -341,7 +347,11 @@ def printTodatabase(trading_pair, exchange_name, chart_interval, emaL1_interval,
             creating_db_file(trading_pair, exchange_name, flag,) #Creates new file
     
     except Exception as e: #Message email that an error on... has occured
-        print(f"4-Strategies/Programs/{trading_pair}/Strategy_2_{trading_pair}interval={str(chart_interval)}.py has error: " + str(e))
+        program_name = f"4-Strategies/Programs/{trading_pair}/Strategy_2_{trading_pair}interval={str(chart_interval)}.py"
+        # RECORDING ERROR
+        path.append("00-Run_Log/Programs")
+        from Log_Output import Record_Output
+        Record_Output(trading_pair, exchange_name, e, program_name)
 
 
 
@@ -439,8 +449,13 @@ def run(trading_pair, exchange_name, chart_interval, emaL1_interval, emaL2_inter
                 L_SL, S_SL, flag, tradeable_fund_Percentage)
             sleep(2)"""
         except Exception as e:
-            print(f"4-Strategies/Programs/{trading_pair}/Strategy_2_{trading_pair}interval={str(chart_interval)}.py has error: " + str(e))
-
+            program_name = f"4-Strategies/Programs/{trading_pair}/Strategy_2_{trading_pair}interval={str(chart_interval)}.py"
+            # RECORDING ERROR
+            path.append("00-Run_Log/Programs")
+            from Log_Output import Record_Output
+            Record_Output(trading_pair, exchange_name, e, program_name)
+            
+            # HANDLING NO DATA TABLE ERROR
             path.append("ZZ-General_Functions/Programs")
             from Error_handling import Handling_Error
             Handling_Error(e).No_Data_Table_Error()
