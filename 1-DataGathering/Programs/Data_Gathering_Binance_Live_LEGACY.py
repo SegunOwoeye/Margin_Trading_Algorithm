@@ -1,12 +1,13 @@
-#!/usr/bin/python3.6.5
+#!/usr/bin/python3.8.5
 
 import websocket
 import rel
 
 from datetime import datetime
-from os import path, remove
+from os import remove
+from os.path import exists
+from sys import path
 import sqlite3
-from time import time
 from json import loads
 from functools import partial
 
@@ -44,19 +45,24 @@ def printTodatabase(exchange_pair, exchange_name, interval, time, open_price, hi
     file_name = f"1-DataGathering/data_gathered/{trading_pair}_data/Live_Data/" + str(date) + exchange_name + exchange_pair + "interval=" + str(interval) + "kline_data.db"
     try:
         #Checks to see if there's an existing db file inside the data gathering dircetory
-        if path.exists(file_name) == True:
+        if exists(file_name) == True:
             #Defining Connection and cursor
             connection = sqlite3.connect(file_name)
             cursor = connection.cursor()
             cursor.execute(f"""INSERT INTO pair_price VALUES ({time}, {open_price}, {high_price}, {low_price}, {close_price}, {volume_traded})""")
             connection.commit()
-            connection.close() #Closing the database
+            connection.close() #Closing the databas
         
         else: #Creates new db file
             creating_db_file(exchange_pair, exchange_name, interval) #Creates new file
 
-    except Exception as e: #Message email that an error on... has occured
-        print(f"1-DataGathering/Programs/{exchange_pair}/Live_Data/Data_Gathering_{exchange_name}_Live_{exchange_pair}_{interval}.py: " + str(e)) 
+    except Exception as e: 
+        # RECORDING ERROR
+        path.append("00-Run_Log/Programs")
+        from Log_Output import Record_Output
+        Record_Output(exchange_pair, exchange_name, e, file_name)
+        
+        # HANDLING NO DATA TABLE ERROR
         path.append("ZZ-General_Functions/Programs")
         from Error_handling import Handling_Error
         Handling_Error(e).No_Data_Table_Error(1)
