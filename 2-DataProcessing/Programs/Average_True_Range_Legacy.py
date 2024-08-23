@@ -210,8 +210,13 @@ def run(trading_pair, exchange_name, chart_interval, indicator_interval):
 
 
         except Exception as e:
-            print(f"2-DataProcessing/Programs/{trading_pair}/Average_True_Range_{trading_pair}interval={chart_interval}.py has error: " + str(e))
+            program_name = f"2-DataProcessing/Programs/{trading_pair}/Average_True_Range_{trading_pair}interval={chart_interval}.py"
+            # RECORDING ERROR
+            path.append("00-Run_Log/Programs")
+            from Log_Output import Record_Output
+            Record_Output(trading_pair, exchange_name, e, program_name)
             
+            # HANDLING NO DATA TABLE ERROR
             path.append("ZZ-General_Functions/Programs")
             from Error_handling import Handling_Error
             Handling_Error(e).No_Data_Table_Error()

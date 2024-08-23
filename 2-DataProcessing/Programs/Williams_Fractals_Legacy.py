@@ -189,7 +189,16 @@ def printTodatabase(trading_pair, exchange_name, chart_interval, indicator_inter
             creating_db_file(trading_pair, exchange_name, chart_interval) #Creates new file
 
     except Exception as e: #Message email that an error on... has occured
-        print(f"2-DataProcessing/Programs/{trading_pair}/Williams_Fractals_{trading_pair}interval={str(chart_interval)}tick={indicator_interval}.py has error: " + str(e))
+        program_name = f"2-DataProcessing/Programs/{trading_pair}/Relative_Strength_Indicator_{trading_pair}interval={str(chart_interval)}tick={indicator_interval}.py"
+        # RECORDING ERROR
+        path.append("00-Run_Log/Programs")
+        from Log_Output import Record_Output
+        Record_Output(trading_pair, exchange_name, e, program_name)
+
+        # HANDLING NO DATA TABLE ERROR 
+        path.append("ZZ-General_Functions/Programs")
+        from Error_handling import Handling_Error
+        Handling_Error(e).No_Data_Table_Error()
 
 
 def run(trading_pair, exchange_name, chart_interval, indicator_interval):
@@ -222,8 +231,13 @@ def run(trading_pair, exchange_name, chart_interval, indicator_interval):
 
 
         except Exception as e:
-            print(f"2-DataProcessing/Programs/{trading_pair}/Relative_Strength_Indicator_{trading_pair}interval={str(chart_interval)}tick={indicator_interval}.py has error: " + str(e))
-
+            program_name = f"2-DataProcessing/Programs/{trading_pair}/Relative_Strength_Indicator_{trading_pair}interval={str(chart_interval)}tick={indicator_interval}.py"
+            # RECORDING ERROR
+            path.append("00-Run_Log/Programs")
+            from Log_Output import Record_Output
+            Record_Output(trading_pair, exchange_name, e, program_name)
+            
+            # HANDLING NO DATA TABLE ERROR 
             path.append("ZZ-General_Functions/Programs")
             from Error_handling import Handling_Error
             Handling_Error(e).No_Data_Table_Error()

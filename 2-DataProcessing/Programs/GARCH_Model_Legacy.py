@@ -235,7 +235,16 @@ def printTodatabase(exchange_pair, exchange_names, chart_interval, indicator_int
             creating_db_file(exchange_pair, exchange_names, chart_interval) #Creates new file
 
     except Exception as e: #Message email that an error on... has occured
-        print(f"2-DataProcessing/Programs/{exchange_pair}/GARCH_data_{exchange_pair}interval={chart_interval}.py has error: " + str(e))
+        program_name = f"2-DataProcessing/Programs/{exchange_pair}/GARCH_data_{exchange_pair}interval={chart_interval}.py"
+        # RECORDING ERROR
+        path.append("00-Run_Log/Programs")
+        from Log_Output import Record_Output
+        Record_Output(exchange_pair, exchange_names, e, program_name)
+        
+        # HANDLING NO DATA TABLE ERROR
+        path.append("ZZ-General_Functions/Programs")
+        from Error_handling import Handling_Error
+        Handling_Error(e).No_Data_Table_Error()
 
 
 #Run Programs
@@ -268,7 +277,13 @@ def run(trading_pair, exchange_name, chart_interval, indicator_interval):
 
         
         except Exception as e:
-            print(f"2-DataProcessing/Programs/{trading_pair}/GARCH_data_{trading_pair}interval={chart_interval}.py has error: " + str(e))
+            program_name = f"2-DataProcessing/Programs/{trading_pair}/GARCH_data_{trading_pair}interval={chart_interval}.py"
+            # RECORDING ERROR
+            path.append("00-Run_Log/Programs")
+            from Log_Output import Record_Output
+            Record_Output(trading_pair, exchange_name, e, program_name)
+            
+            # HANDLING NO DATA TABLE ERROR
             path.append("ZZ-General_Functions/Programs")
             from Error_handling import Handling_Error
             Handling_Error(e).No_Data_Table_Error()

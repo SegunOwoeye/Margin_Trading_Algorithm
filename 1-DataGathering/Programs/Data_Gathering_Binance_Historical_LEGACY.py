@@ -122,7 +122,7 @@ def printTodatabase(exchange_pair, exchange_name, interval, limit):
                         {historical_klines[i][3]}, {historical_klines[i][4]}, {historical_klines[i][5]})""")
                     connection.commit()
                     connection.close() #Closing the database
-            s
+            
         else: #Creates new db file
             creating_db_file(exchange_pair, exchange_name, interval) #Creates new file
 
