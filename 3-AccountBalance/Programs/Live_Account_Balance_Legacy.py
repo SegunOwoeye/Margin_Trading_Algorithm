@@ -117,7 +117,7 @@ class Live_Balance:
             # RECORDING ERROR
             path.append("00-Run_Log/Programs")
             from Log_Output import Record_Output
-            Record_Output(trading_pair, exchange_name, e, program_name)
+            Record_Output(self.trading_pair, self.exchange_name, e, program_name)
             
             # HANDLING NO DATA TABLE ERROR
             path.append("ZZ-General_Functions/Programs")
