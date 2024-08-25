@@ -114,8 +114,7 @@ def run(method, path, params, r_type):
         print(f"Misc/Binance_Rest_Api.py: {e}")
  
 
-"""KEY = "GTgis85VIseFCzAo7DYbQGeIJFMZDyprbsBoK7M5VMdxMUYEcfE9fsENnOPYcNL6"
-SECRET = "op5SxVWbBbclYdSsYze0WSIPuYR8xbpTAuustfQ9S11ZuMObG7ul0NgZ4uX8yyYh"""
+
 
 
 """ ======  end of CLASS ====== """
