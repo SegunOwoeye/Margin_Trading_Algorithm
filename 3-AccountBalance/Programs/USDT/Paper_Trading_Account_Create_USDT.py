@@ -4,8 +4,12 @@ from sys import path
 path.append("3-AccountBalance/Programs")
 from Paper_Trading_Account_Create_Legacy import run
 
-# Balance
-balance = 10000.00
+# Variables
+trading_pair = "USDT"
+exchange_name = "Binance"
+db_name = "Demo_Balance"
+balance = 10000
+strat_db_name = "Strategy2_Orders"
+R_Trading_Pairs = "BTCUSDT"
 
-#Run program
-run("USDT", "Binance", "Demo_Balance", balance)
+run(trading_pair, exchange_name, db_name, balance, strat_db_name, R_Trading_Pairs)
