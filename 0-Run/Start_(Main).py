@@ -9,6 +9,18 @@ from time import sleep
 #-> Declaring the pairs to be traded
 pair_list = ["BTCUSDT"]#, "ETHUSDT"]
 
+#-> Getting list of signular assets (Ex: BTC, ETH, USDT)
+def sing_asset_list():
+    asset_pairs = []
+    for i in range(len(pair_list)):
+        asset_name = pair_list[i].replace("USDT", "")
+        asset_pairs.append(asset_name)
+
+    asset_pairs.append("USDT")
+
+    return asset_pairs
+asset_list = sing_asset_list
+
 
 #-> Declaring time intervals
 time_intervals = ["5m"]
@@ -33,6 +45,9 @@ wfc_intervals = [100, 90]
 #TRADING ENVIRONMENT (flag)
 #     [0] LIVE TRADING
 #     [1] DEMO TRADING
+
+""" GET THIS FROM A SETTINGS FILE"""
+
 flag = 1
 
 from sys import path
@@ -185,20 +200,18 @@ def data_processing_file_lists():
 def demo_account_Balance_list(): # Creates Demo account balances for relevant pairs
     #Running Demo_balance programs 
     run_demo_balance_programs = []
-    # Splitting the pair
-    for i in range(len(pair_list)):
-        if "USDT" in pair_list[i]:
-            pair1 = pair_list[i].replace("USDT","")
-            pair2 = "USDT"
-            symbol_list = [pair1, pair2]
-            for p in range(len(symbol_list)): 
-                program_name = F"3-AccountBalance/Programs/{symbol_list[p]}/Paper_Trading_Account_Create_{symbol_list[p]}.py"
-                run_demo_balance_programs.append(program_name)
+    for p in range(len(asset_list)): 
+        program_name = F"3-AccountBalance/Programs/{asset_list[p]}/Paper_Trading_Account_Create_{asset_list[p]}.py"
+        run_demo_balance_programs.append(program_name)
     return run_demo_balance_programs            
 
-""" Gets live account balances for relevant pairs """
-def live_account_Balance_list(): # WIP
-    pass
+def live_account_Balance_list(): # Gets live account balances for relevant pairs
+    # Running Live balance programs 
+    run_live_balance_programs = []
+    for p in range(len(asset_list)):
+        program_name = F"3-AccountBalance/Programs/{asset_list[p]}/Live_Account_Balance_Legacy_{asset_list[p]}.py"
+        run_live_balance_programs.append(program_name) 
+    return run_live_balance_programs 
 
 
 if flag == 1: # Demo
