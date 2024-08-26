@@ -38,11 +38,15 @@ def demo_balances(trading_pair, Exchange, db_name, Override = False):
 path.append("3-AccountBalance/Programs")
 from Paper_Trading_Account_Create_Legacy import run
 
-# Balance
+# Variables
+trading_pair = "{symbol_list[i]}"
+exchange_name = "{Exchange}"
+db_name = "{db_name}"
 balance = {balance}
+strat_db_name = "Strategy2_Orders"
+R_Trading_Pairs = "{trading_pair[p]}"
 
-#Run program
-run("{symbol_list[i]}", "{Exchange}", "{db_name}", balance)
+run(trading_pair, exchange_name, db_name, balance, strat_db_name, R_Trading_Pairs)
 
                         """
 
