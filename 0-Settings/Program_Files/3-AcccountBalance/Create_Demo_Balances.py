@@ -1,4 +1,4 @@
-#THIS PYTHON FILE CREATES INDICATORS ACROSS SPECIFIED TIMEFRAMES
+#THIS PYTHON FILE CREATES Demo Balances to Paper Trade
 
 #IMPORTS
 from os.path import exists, join, isfile
