@@ -1,0 +1,40 @@
+{
+    "program":{
+        "name": "Margin Trading Program",
+        "version": "1.0.0",
+        "exchange": "Binance",
+        "description": ""
+
+    },
+    "api_info":{
+        "api_key": "GTgis85VIseFCzAo7DYbQGeIJFMZDyprbsBoK7M5VMdxMUYEcfE9fsENnOPYcNL6",
+        "secret_key": "op5SxVWbBbclYdSsYze0WSIPuYR8xbpTAuustfQ9S11ZuMObG7ul0NgZ4uX8yyYh"
+    },
+
+    "application_settings":{
+        "pair_list": ["BTCUSDT"],
+        "data_gathering":{
+            "time_intervals": ["5m"],
+            "config_ti": ["1m", "5m", "15m", "1h", "4h", "1d"],
+            "historical_data_limit": 1000,
+            "orderbook_levels": 10
+        },
+
+        "data_processing":{
+            "sma_long_intervals": [20, 50, 100],
+            "sma_short_intervals": [15, 45, 90],
+            "ema_long_intervals": [20, 50, 100],
+            "ema_short_intervals": [15, 45, 90],
+            "wf_intervals": [3],
+            "rsi_intervals": [6, 12],
+            "wfc_intervals": [100, 90]
+        },
+        
+        "trading_environment":{"flag":1}
+
+    },
+    "strategies": [""]
+
+
+
+}
