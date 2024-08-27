@@ -2,12 +2,21 @@ import tkinter as tk
 import os
 import subprocess
 from time import sleep
+from sys import path
+
+####################################################################################
+# [0] Getting System Config
+####################################################################################
+# Changing Path
+path.append("0-Settings/Program_Files/Misc/")
+from read_config import run # User Defined Function
+program_settings = run()
 
 ####################################################################################
 #[1] Setting Up application
 ####################################################################################
 #-> Declaring the pairs to be traded
-pair_list = ["BTCUSDT"]#, "ETHUSDT"]
+pair_list = program_settings["application_settings"]["pair_list"]
 
 #-> Getting list of signular assets (Ex: BTC, ETH, USDT)
 def sing_asset_list():
@@ -19,42 +28,35 @@ def sing_asset_list():
     asset_pairs.append("USDT")
 
     return asset_pairs
-asset_list = sing_asset_list
+asset_list = sing_asset_list()
+
+# [A] Data Gathering Interval Settings
+dg_settings = program_settings["application_settings"]["data_gathering"]
+
+time_intervals = dg_settings["time_intervals"] # Declaring time intervals
+config_ti = dg_settings["config_ti"] # Time intervals for creating program files 
+limit = dg_settings["historical_data_limit"] # Declaring Limit for Historical Data Gathered
+levels = dg_settings["orderbook_levels"] # Declaring levels for Orderbook
 
 
-#-> Declaring time intervals
-time_intervals = ["5m"]
-config_ti = ["1m", "5m", "15m", "1h", "4h", "1d"] # Time intervals for creating program files 
+# [B] Data Processing Interval Settings
+dp_settings = program_settings["application_settings"]["data_processing"]
 
-#-> Declaring Limit for Historical Data Gathered
-limit = 1000
-
-#-> Declaring levels for Orderbook
-levels = 10
-
-#-> DECARING INTERVALS OF INTEREST
-#SMA Intervals
-sma_intervals = [20, 50, 100] + [15, 45, 90]
-ema_intervals = sma_intervals
-wf_intervals = [3]
-rsi_intervals = [6, 12]
-wfc_intervals = [100, 90]
+sma_intervals = dp_settings["sma_long_intervals"] + dp_settings["sma_short_intervals"] # SMA Intervals
+ema_intervals = dp_settings["ema_long_intervals"] + dp_settings["ema_short_intervals"] # EMA Intervals
+wf_intervals = dp_settings["wf_intervals"]
+rsi_intervals = dp_settings["rsi_intervals"]
+wfc_intervals = dp_settings['wfc_intervals']
 
 
-
-#TRADING ENVIRONMENT (flag)
+# [C] TRADING ENVIRONMENT (flag)
 #     [0] LIVE TRADING
 #     [1] DEMO TRADING
 
-""" GET THIS FROM A SETTINGS FILE"""
+flag = program_settings["application_settings"]['trading_environment']['flag'] # Flag
 
-flag = 1
 
-from sys import path
-
-"""TRADING PAIR LIST"""
-#pair_list = ["BTCUSDT", "ETHUSDT"]
-
+# [D] CREATING FOLDERS
 path.append("0-Run")
 from Setup import start_1, start_2, start_3, start_4, start_5
 
