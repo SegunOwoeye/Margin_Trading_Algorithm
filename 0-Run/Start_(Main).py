@@ -1,5 +1,5 @@
 import tkinter as tk
-import os
+#import os
 import subprocess
 from time import sleep
 from sys import path
