@@ -4,7 +4,7 @@ from hashlib import sha256
 import requests
 from urllib.parse import urlencode
 from typing import Optional
-import sqlite3
+from sys import path as import_path
 
 ###############################
 # IMPORTANT -  Use https://nordvpn.com/ip-lookup/ to get your IP address
@@ -16,22 +16,14 @@ BASE_URL = "https://api.binance.com"  # production base url
 requests.packages.urllib3.util.connection.HAS_IPV6 = False
 
 def get_api():
-    file_name = "0-Settings/Files/api.db"
-    connection = sqlite3.connect(file_name)
-    cursor = connection.cursor()
+    import_path.append("0-Settings/Program_Files/Misc/")
+    from read_config import run # User Defined Function
+    program_settings = run()
+    api_info = program_settings['api_info']
+    key = api_info['api_key']
+    secret = api_info['secret_key']
 
-    cursor.execute("Select * FROM info")
-    
-    list_check = cursor.fetchall()
-    
-    #COMES OUT as a LIST
-    recent_log = list_check[-1] #Most Recent data gathered from file
-  
-    connection.commit()
-    #Closing the database
-    connection.close()
-
-    return recent_log
+    return key, secret
 
 class Client:
 
@@ -118,9 +110,9 @@ def run(method, path, params, r_type):
 
 
 """ ======  end of CLASS ====== """
-
+'''
 # TEST FOR HIR
-"""params = {
+params = {
     "assets": "BTC",
     "isIsolated": "FALSE"
 }
@@ -134,14 +126,9 @@ r_type = 0
 
 
 print(run(method, path, params, r_type))
-"""
 
 
-
-
-
-
-
+'''
 
 
 
