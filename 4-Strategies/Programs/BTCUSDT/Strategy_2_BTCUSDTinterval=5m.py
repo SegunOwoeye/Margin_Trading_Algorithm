@@ -2,7 +2,9 @@ from sys import path
 
 
 path.append("4-Strategies/Programs")
+path.append("0-Settings/Program_Files/Misc/")
 from Strategy_2_Legacy import run
+from read_config import run as config # type: ignore
 
 # Defining Variables
 trading_pair = "BTCUSDT"
@@ -20,7 +22,7 @@ L_TP = 0.8
 S_TP = 0.5
 L_SL = 0.7
 S_SL = 1.0
-flag = 1
+flag = config()["application_settings"]['trading_environment']['flag']
 tradeable_fund_Percentage = 50
 
 #Run program
