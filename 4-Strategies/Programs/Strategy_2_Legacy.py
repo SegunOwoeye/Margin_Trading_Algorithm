@@ -209,14 +209,6 @@ def printTodatabase(trading_pair, exchange_name, chart_interval, emaL1_interval,
              emaS1_interval, emaS2_interval, emaS3_interval, rsi_interval, leverage, L_TP, S_TP, 
              L_SL, S_SL, flag, tradeable_fund_Percentage, db_name = "Strategy2_Orders",
              Strategy_Name = "Strategy_2"):
-    Strategy_Name = f"{Strategy_Name}{chart_interval}"
-    
-    # Getting the Signal
-    signal = strategy(trading_pair, exchange_name, chart_interval, emaL1_interval, emaL2_interval, emaL3_interval,
-             emaS1_interval, emaS2_interval, emaS3_interval, rsi_interval)
-    
-    #signal = -1
-
     
     # Getting file name
     date_and_time_db = (datetime.now())
@@ -228,12 +220,19 @@ def printTodatabase(trading_pair, exchange_name, chart_interval, emaL1_interval,
         file_name = f"4-Strategies/data_gathered/{trading_pair}_data/{str(date_db)}{exchange_name}{trading_pair}{db_name}DEMO.db"
     try:
         #Checks to see if there's an existing db file inside the data gathering dircetory
-        if exists(file_name) == True:            
+        if exists(file_name) == True:  
+            Strategy_Name = f"{Strategy_Name}{chart_interval}"
+    
+            # Getting the Signal
+            signal = strategy(trading_pair, exchange_name, chart_interval, emaL1_interval, emaL2_interval, emaL3_interval,
+                    emaS1_interval, emaS2_interval, emaS3_interval, rsi_interval)
+            
+            #signal = -1
+
             # [0] Gathering the Date and time 
             date_and_time = (datetime.now())
             date = date_and_time.strftime("%m/%d/%Y, %H:%M:%S") #[0] Date
 
-            
             if abs(signal) == 1:
             
                 """ SETUP ORDERBOOK """
@@ -339,8 +338,6 @@ def printTodatabase(trading_pair, exchange_name, chart_interval, emaL1_interval,
                     # Send Email
                     email_alert(subject, message, email_recipient)
                 
-
-
 
 
 

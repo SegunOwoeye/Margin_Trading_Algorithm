@@ -135,6 +135,7 @@ class Monitor:
 
 def run(trading_pair, exchange_name, flag, chart_interval, db_name):
     while 1:
+        time.sleep(5)
         try: 
             """ CHECKS TO SEE IF THE REQUIRED FILES ARE PRESENT, IF NOT IT WAITS"""
             # [1] Gets required filenames
