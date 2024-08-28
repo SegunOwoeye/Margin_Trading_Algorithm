@@ -216,6 +216,7 @@ def printTodatabase(trading_pair, exchange_name, chart_interval, emaL1_interval,
              emaS1_interval, emaS2_interval, emaS3_interval, rsi_interval)
     
     #signal = -1
+
     
     # Getting file name
     date_and_time_db = (datetime.now())
@@ -225,13 +226,13 @@ def printTodatabase(trading_pair, exchange_name, chart_interval, emaL1_interval,
         file_name = f"4-Strategies/data_gathered/{trading_pair}_data/{str(date_db)}{exchange_name}{trading_pair}{db_name}.db"
     elif flag == 1: # Demo
         file_name = f"4-Strategies/data_gathered/{trading_pair}_data/{str(date_db)}{exchange_name}{trading_pair}{db_name}DEMO.db"
-
     try:
         #Checks to see if there's an existing db file inside the data gathering dircetory
         if exists(file_name) == True:            
             # [0] Gathering the Date and time 
             date_and_time = (datetime.now())
             date = date_and_time.strftime("%m/%d/%Y, %H:%M:%S") #[0] Date
+
             
             if abs(signal) == 1:
             
@@ -242,9 +243,11 @@ def printTodatabase(trading_pair, exchange_name, chart_interval, emaL1_interval,
                 elif signal == -1:
                     side = "SHORT"
                 
+
                 #Setup Calculation Class
                 calc_marker = calculating_markers(trading_pair, exchange_name,chart_interval, flag, leverage, L_TP,
                                                S_TP,L_SL,S_SL, tradeable_fund_Percentage, side)
+                
                 tradeing_funds = calc_marker.tradable_funds()
                 # [5] Account balance to trade
                 balances = pair_balance(trading_pair, exchange_name, chart_interval, flag).flag_balance() # ["BTC", "USDT"]
