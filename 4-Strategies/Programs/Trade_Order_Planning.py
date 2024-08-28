@@ -36,7 +36,6 @@ class pair_balance:
             date_and_time = (datetime.now())
             date = date_and_time.strftime("%b%d%y")
             file_name = f"3-AccountBalance/data_gathered/{pairs[i]}_data/{date}{self.exchange_name}{pairs[i]}{db_name}_data.db"
-            #print(file_name)
             
             try:
                 if exists(file_name):
@@ -55,8 +54,8 @@ class pair_balance:
 
             except Exception as e: # 2-DataProcessing\Programs\BTCUSDT\Exponential_Moving_Average_BTCUSDTinterval=1mtick=50.py
                 error_file_name = f"4-Strategies/Programs/{self.trading_pair}/Strategy_2_{self.trading_pair}interval={self.chart_interval}.py"
-                print(F"{error_file_name}: {e}")
-
+                print(f"{error_file_name}: {e}")
+        
         return balance_list
 
     # [0] Get the balances of the tradig pairs for the live account
@@ -177,28 +176,26 @@ class calculating_markers:
         precision_data = calculating_markers(self.trading_pair, self.exchange_name, self.chart_interval, self.flag, self.leverage, 
                                     self.L_TP, self.S_TP, self.L_SL, self.S_SL, self.tradable_funds_percentage,
                                     self.side).get_asset_precision()
-        
         # For Initialising trades, all assets origionate from the USDT balance
+        
+        balance = 0
+        precision = 0
         for i in range(len(pairs)):
-            if (pairs[i] == "USDT" or pairs[i] == "USDC"): 
-                if self.side == "LONG":
-                    balance = pair_balance(self.trading_pair, self.exchange_name, self.chart_interval, self.flag).flag_balance()[1]
-                    precision = precision_data[2]
-                else: pass
-            elif self.side == "SHORT":
-                balance = pair_balance(self.trading_pair, self.exchange_name, self.chart_interval, self.flag).flag_balance()[1]
+            if (pairs[i] == "USDT" and self.side == "LONG"): 
+                balance = pair_balance(self.trading_pair, self.exchange_name, self.chart_interval, self.flag).flag_balance()[0]
                 precision = precision_data[2]
-            else: pass
-          
+            elif self.side == "SHORT" and pairs[i] == "USDT":
+                balance = pair_balance(self.trading_pair, self.exchange_name, self.chart_interval, self.flag).flag_balance()[0]
+                precision = precision_data[2]
+            else: pass 
         ### NEED TO FIND THE PRECISION OF ALL ASSETS
         # Continues with Regular Operation for Leveraging
-        if self.side == "LONG":   
+        if self.side == "LONG":  
             equity = balance * (self.tradable_funds_percentage/100) * self.leverage
             Account_balance_Traded = balance * (self.tradable_funds_percentage/100)
         # Special conditioning
         elif self.side == "SHORT":
             closing_price = self.get_current_data()[4]
-            #print(closing_price)
             equity = (balance * (self.tradable_funds_percentage/100) * (self.leverage-1))/closing_price
             Account_balance_Traded = (balance * (self.tradable_funds_percentage/100))/closing_price
 
@@ -210,7 +207,6 @@ class calculating_markers:
         date_and_time = (datetime.now())
         date = date_and_time.strftime("%b%d%y")
         file_name = f"5-Trade_Monitoring/data_gathered/{self.trading_pair}_data/{date}{self.trading_pair}HIR_data.db"
-        #print(file_name)
         connection = sqlite3.connect(file_name)
         cursor = connection.cursor()
 
@@ -263,7 +259,6 @@ class calculating_markers:
         date_and_time = (datetime.now())
         date = date_and_time.strftime("%b%d%y%H")
         file_name = f"1-DataGathering/data_gathered/{self.trading_pair}_data/Live_Data/" + str(date) + self.exchange_name + self.trading_pair + "interval=" + str(self.chart_interval) + "kline_data.db"
-        #print(file_name)
         connection = sqlite3.connect(file_name)
         cursor = connection.cursor()
 
