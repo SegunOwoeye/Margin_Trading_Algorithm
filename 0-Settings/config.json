@@ -30,7 +30,9 @@
             "wfc_intervals": [100, 90]
         },
         
-        "trading_environment":{"flag":1}
+        "trading_environment":{"flag":1},
+
+        "strategies":["Strategy2_Orders"]
 
     },
     "strategies": [""]

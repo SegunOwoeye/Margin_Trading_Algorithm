@@ -75,6 +75,13 @@ from config_files.Data_Gathering_file_C import create_data_gathering
 #Create programs for data Gathering
 create_data_gathering(pair_list, config_ti, limit, levels)
 
+#[1.3] Creates pdb file for strats
+path.append("4-Strategies/Programs/")
+from Strategy_2_Legacy import creating_db_file
+strat_db_list = program_settings["application_settings"]["strategies"]
+for i in range(len(strat_db_list)):
+    for p in range(len(pair_list)):
+        creating_db_file(pair_list[p], "Binance", flag, db_name = strat_db_list[i])
 
 ####################################################################################
 #[2] Data Gathering
