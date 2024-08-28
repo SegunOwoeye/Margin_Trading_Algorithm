@@ -27,28 +27,32 @@ def creating_db_file(trading_pair, exchange_name, flag, db_name = "Strategy2_Ord
         file_name = f"4-Strategies/data_gathered/{trading_pair}_data/{str(date)}{exchange_name}{trading_pair}{db_name}.db"
     elif flag == 1: # Demo
         file_name = f"4-Strategies/data_gathered/{trading_pair}_data/{str(date)}{exchange_name}{trading_pair}{db_name}DEMO.db"
-    f = open(file_name, "x")
-    
-    #Defining Connection and cursor
-    connection = sqlite3.connect(file_name)
-    cursor = connection.cursor()
+    # Checking to see if the file exists
+    if exists(file_name):
+        pass
+    else:
+        f = open(file_name, "x")
+        
+        #Defining Connection and cursor
+        connection = sqlite3.connect(file_name)
+        cursor = connection.cursor()
 
-    #Creating Current exchange_tag price table]
-    #Fractal type can either be Bullish or Bearish
-    command1 = f"""CREATE TABLE IF NOT EXISTS
-    trade_data(time TEXT, server_time TEXT, trading_pair TEXT, Side TEXT, Order_Type TEXT, Leverage FLOAT, Fund_Amount FLOAT, Equity FLOAT, HIR FLOAT,
-        Target_Price FLOAT, Stop_Loss FLOAT, Stop_Limit FLOAT, Entry_Time TEXT, Entry_Order_ID TEXT, Entry_Price FLOAT, O_Funds_Traded FLOAT,
-        Exit_Time TEXT, Exit_Price FLOAT, C_Funds_Traded FLOAT, Percentage_Change FLOAT, Entry_Fee FLOAT, Exit_Fee FLOAT, 
-        Strat_Name TEXT, Status TEXT, TP_Order_ID TEXT, SL_Order_ID TEXT)"""
-    
-    #IF TRADE STATUS IS OPEN, THE PURCHASE HASN'T GONE THROUGH
-    #IF TRADE STATUS IS CLOSED, THE PURCHASE HAS GONE THROUGH
+        #Creating Current exchange_tag price table]
+        #Fractal type can either be Bullish or Bearish
+        command1 = f"""CREATE TABLE IF NOT EXISTS
+        trade_data(time TEXT, server_time TEXT, trading_pair TEXT, Side TEXT, Order_Type TEXT, Leverage FLOAT, Fund_Amount FLOAT, Equity FLOAT, HIR FLOAT,
+            Target_Price FLOAT, Stop_Loss FLOAT, Stop_Limit FLOAT, Entry_Time TEXT, Entry_Order_ID TEXT, Entry_Price FLOAT, O_Funds_Traded FLOAT,
+            Exit_Time TEXT, Exit_Price FLOAT, C_Funds_Traded FLOAT, Percentage_Change FLOAT, Entry_Fee FLOAT, Exit_Fee FLOAT, 
+            Strat_Name TEXT, Status TEXT, TP_Order_ID TEXT, SL_Order_ID TEXT)"""
+        
+        #IF TRADE STATUS IS OPEN, THE PURCHASE HASN'T GONE THROUGH
+        #IF TRADE STATUS IS CLOSED, THE PURCHASE HAS GONE THROUGH
 
-    cursor.execute(command1)
-    connection.commit()
+        cursor.execute(command1)
+        connection.commit()
 
-    #Closing the database
-    connection.close()
+        #Closing the database
+        connection.close()
 
 
 """[2] READS THE DATA FROM THE PREVIOUS FILES AND OUTPUTS A BULLISH [1] OR BEARIRCH [-1] SIGNAL """
