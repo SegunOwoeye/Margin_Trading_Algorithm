@@ -207,11 +207,13 @@ def data_processing_file_lists():
 ####################################################################################
 
 def demo_account_Balance_list(): # Creates Demo account balances for relevant pairs
-    #Running Demo_balance programs 
+    #Running Demo_balance programs | Onlyy Runs USDT Account
     run_demo_balance_programs = []
-    for p in range(len(asset_list)): 
+    """for p in range(len(asset_list)): 
         program_name = F"3-AccountBalance/Programs/{asset_list[p]}/Paper_Trading_Account_Create_{asset_list[p]}.py"
-        run_demo_balance_programs.append(program_name)
+        run_demo_balance_programs.append(program_name)"""
+    program_name = F"3-AccountBalance/Programs/USDT/Paper_Trading_Account_Create_USDT.py"
+    run_demo_balance_programs.append(program_name)
     return run_demo_balance_programs            
 
 def live_account_Balance_list(): # Gets live account balances for relevant pairs
