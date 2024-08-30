@@ -3,6 +3,7 @@
 from datetime import datetime
 from os import path
 from time import sleep
+from sys import exc_info
 
 
 """
@@ -31,7 +32,15 @@ def Record_Output(exchange_pair, exchange_name, Message: str, program_name: str 
             
             #Text file database
             f = open(file_name, "a")
-            f.write(f"{record_time} | {program_name}: {(Message)} \n")
+
+            # CHECKS TO SEE IF THE MESSAGE IS AN ERROR OR NOT
+            if isinstance(Message, Exception): # Error
+                exc_type, exc_obj, exc_tb = exc_info()
+                fname = path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+                f.write(f"File Name: {fname} | Line: {exc_tb.tb_lineno} | Error: {exc_type} \n")
+            else: # Not an Error
+                f.write(f"{record_time} | {program_name}: {(Message)} \n")
+           
             sleep(wait_time)
 
         else: #Creates new db file
@@ -44,4 +53,9 @@ def Record_Output(exchange_pair, exchange_name, Message: str, program_name: str 
 
 
 #starts the program
-#Record_Output("BTCUSDT","Binance", 5)
+
+"""try: 
+    4/0
+except Exception as e:
+    Record_Output("BTCUSDT","Binance", e)
+    sleep(100)"""
