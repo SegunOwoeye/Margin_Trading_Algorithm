@@ -95,53 +95,56 @@ def printTodatabase(exchange_pair, exchange_name, interval, limit):
     date_and_time = (datetime.now())
     date = date_and_time.strftime("%b%d%y") #date_and_time.strftime("%b%d%y%H")
     file_name = f"1-DataGathering/data_gathered/{trading_pair}_data/Historical_Klines/" + str(date) + exchange_name + exchange_pair + "interval=" + str(interval) + "kline_data.db"
-    program_name = f"1-DataGathering/Programs/{trading_pair}/Historical_Klines/Data_Gathering_{exchange_name}_Historical_{trading_pair}_interval={interval}.py"
-
-    try:
-        #Checks to see if there's an existing db file inside the data gathering dircetory
-        if exists(file_name) == True:
-            timestamp_log = time_stamp_collection(exchange_pair, exchange_name, interval) #Gets time interval data
-            
-            #CHECKS TO SEE IF THE TIMESTAMP ALREADY EXISTS WITHIN THE DATABASE FILE
-            
-            for i in range(len(historical_klines)):
-                #Does nothing if the timestamp is already
-                if str(historical_klines[i][0]) in timestamp_log:
-                    pass
-                    #print('Time Exists')
-                
-                #Adds new data to db file if there is a new 
-                else:
-                    #print("printing to db")
-                    #Defining Connection and cursor
-                    connection = sqlite3.connect(file_name)
-                    cursor = connection.cursor()
-
-                    current_time = (datetime.now())
-                    cursor.execute(f"""INSERT INTO pair_price VALUES ({str(historical_klines[i][0])}, {historical_klines[i][1]}, {historical_klines[i][2]},
-                        {historical_klines[i][3]}, {historical_klines[i][4]}, {historical_klines[i][5]})""")
-                    connection.commit()
-                    connection.close() #Closing the database
-            
-        else: #Creates new db file
-            creating_db_file(exchange_pair, exchange_name, interval) #Creates new file
-
-    except Exception as e: 
-        # RECORDING ERROR
-        path.append("00-Run_Log/Programs")
-        from Log_Output import Record_Output
-        Record_Output(exchange_pair, exchange_name, e, program_name)
+    
+    #Checks to see if there's an existing db file inside the data gathering dircetory
+    if exists(file_name) == True:
+        timestamp_log = time_stamp_collection(exchange_pair, exchange_name, interval) #Gets time interval data
         
-        # HANDLING NO DATA TABLE ERROR
-        path.append("ZZ-General_Functions/Programs")
-        from Error_handling import Handling_Error
-        Handling_Error(e).No_Data_Table_Error(1)
+        #CHECKS TO SEE IF THE TIMESTAMP ALREADY EXISTS WITHIN THE DATABASE FILE
+        
+        for i in range(len(historical_klines)):
+            #Does nothing if the timestamp is already
+            if str(historical_klines[i][0]) in timestamp_log:
+                pass
+                #print('Time Exists')
+            
+            #Adds new data to db file if there is a new 
+            else:
+                #print("printing to db")
+                #Defining Connection and cursor
+                connection = sqlite3.connect(file_name)
+                cursor = connection.cursor()
+
+                current_time = (datetime.now())
+                cursor.execute(f"""INSERT INTO pair_price VALUES ({str(historical_klines[i][0])}, {historical_klines[i][1]}, {historical_klines[i][2]},
+                    {historical_klines[i][3]}, {historical_klines[i][4]}, {historical_klines[i][5]})""")
+                connection.commit()
+                connection.close() #Closing the database
+        
+    else: #Creates new db file
+        creating_db_file(exchange_pair, exchange_name, interval) #Creates new file
+
+    
 
 
 #runs program in a loop
 def run(exchange_pair, exchange_name, interval, limit):
     while 1:
-        printTodatabase(exchange_pair, exchange_name, interval, limit)
+        try:
+            printTodatabase(exchange_pair, exchange_name, interval, limit)
+            sl = 1/0
+        except Exception as e:
+            program_name = f"1-DataGathering/Programs/{exchange_pair}/Historical_Klines/Data_Gathering_{exchange_name}_Historical_{exchange_pair}_interval={interval}.py"
+            # RECORDING ERROR
+            path.append("00-Run_Log/Programs")
+            from Log_Output import Record_Output
+            Record_Output(exchange_pair, exchange_name, e, program_name)
+            
+            # HANDLING NO DATA TABLE ERROR
+            path.append("ZZ-General_Functions/Programs")
+            from Error_handling import Handling_Error
+            Handling_Error(e).No_Data_Table_Error(1)
+
 
     
 
