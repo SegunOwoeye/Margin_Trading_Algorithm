@@ -132,7 +132,6 @@ def run(exchange_pair, exchange_name, interval, limit):
     while 1:
         try:
             printTodatabase(exchange_pair, exchange_name, interval, limit)
-            sl = 1/0
         except Exception as e:
             program_name = f"1-DataGathering/Programs/{exchange_pair}/Historical_Klines/Data_Gathering_{exchange_name}_Historical_{exchange_pair}_interval={interval}.py"
             # RECORDING ERROR
