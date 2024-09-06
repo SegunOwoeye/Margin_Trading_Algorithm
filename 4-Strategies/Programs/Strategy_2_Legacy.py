@@ -253,7 +253,7 @@ def printTodatabase(trading_pair, exchange_name, chart_interval, emaL1_interval,
                 
                 tradeing_funds = calc_marker.tradable_funds()
                 # [5] Account balance to trade
-                balances = pair_balance(trading_pair, exchange_name, chart_interval, flag).flag_balance() # ["BTC", "USDT"]
+                balances = pair_balance(trading_pair, exchange_name, chart_interval, flag).flag_balance()[0] # ["BTC", "USDT"]
                 # [4] Leverage
                 Leverage = leverage
                 # [5] Equity
