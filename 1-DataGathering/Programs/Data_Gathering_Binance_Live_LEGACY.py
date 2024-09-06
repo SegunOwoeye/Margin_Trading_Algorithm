@@ -108,15 +108,24 @@ def on_open(ws,interval):
 4. RUNS THE PROGRAM
 """
 def run(exchange_pair, exchange_name, interval):
-    ws = websocket.WebSocketApp(f"wss://stream.binance.com:9443/ws/{exchange_pair.lower()}@kline_{interval}",
-                              on_open=partial(on_open, interval=interval),
-                              on_message=partial(on_message, exchange_pair=exchange_pair, exchange_name=exchange_name, interval=interval),
-                              on_error=on_error,
-                              on_close=on_close)
+    while 1: # Run forever
+        try: 
+            ws = websocket.WebSocketApp(f"wss://stream.binance.com:9443/ws/{exchange_pair.lower()}@kline_{interval}",
+                                    on_open=partial(on_open, interval=interval),
+                                    on_message=partial(on_message, exchange_pair=exchange_pair, exchange_name=exchange_name, interval=interval),
+                                    on_error=on_error,
+                                    on_close=on_close)
 
-    ws.run_forever(dispatcher=rel)  # Set dispatcher to automatic reconnection, 5 second reconnect delay if connection closed unexpectedly
-    rel.signal(2, rel.abort)  # Keyboard Interrupt
-    rel.dispatch()
+            ws.run_forever(dispatcher=rel)  # Set dispatcher to automatic reconnection, 5 second reconnect delay if connection closed unexpectedly
+            rel.signal(2, rel.abort)  # Keyboard Interrupt
+            rel.dispatch()
+        except Exception as e:
+            program_name = f"1-DataGathering/Programs/{exchange_pair}/Live_Data/Data_Gathering_{exchange_name}_Live_{exchange_pair}_interval={interval}.py"
+            # RECORDING ERROR
+            path.append("00-Run_Log/Programs")
+            from Log_Output import Record_Output
+            Record_Output(exchange_pair, exchange_name, e, program_name)
+
 
 """
 5. CHECKS THE FILE LOG
