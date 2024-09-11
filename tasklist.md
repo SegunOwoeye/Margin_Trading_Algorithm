@@ -7,7 +7,7 @@
 - [x] Add an account balance tracker that is integrated with the orderbook
 - [x] Change the time where another order can be placed for the same strategy and interval to be 4 times the time 
 - [x] Create a file that settles the fund amount
-- [ ] Introduce a method for monitoring whether python file are online or not
+- [x] Introduce a method for monitoring whether python file are online or not
 - [x] Address the new issue where there's too  much time beteen checking if a file is empty and not enough time in suspending programs where the table isn't there
 - [ ] Research and Add additional strategies
 - [x] When an error occurs, wait 30 seconds before running the program again -> With this change, make a central setting database where general settings as to how this shoudl run for all programs are held (e.g. error wait times)
