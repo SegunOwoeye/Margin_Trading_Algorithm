@@ -1,8 +1,10 @@
 import tkinter as tk
-#import os
+import sqlite3
+from os import remove, kill
 import subprocess
-from time import sleep
+from time import sleep, time
 from sys import path
+from signal import SIGTERM
 
 ####################################################################################
 # [0] Getting System Config
@@ -288,12 +290,21 @@ def orderbook_monitoring_file_lists():
     return program_list
 
 ####################################################################################
-#[8] lists of all programs to be run
+# [8] Core Programs
+####################################################################################
+def core_programs_list():
+    program_name = ["0-Run/RunTime_Tools/Restart_[Start(Main)].py"]
+    return program_name
+
+
+
+####################################################################################
+#[9] lists of all programs to be run
 ####################################################################################
 
 # 1. Account Balance Gathering + {Trade system startup}
+trade_sys_start_programs = core_programs_list()
 account_balance_programs = account_balance_program
-
 
 # 2. Raw Data Gathering
 gathering_data_programs_1 = gathering_data_file_list1() 
@@ -312,39 +323,70 @@ strategy_programs = strategy_file_list()
 # 6. Orderbook Monitoring
 orderbook_monitoring_programs = orderbook_monitoring_file_lists()
 
-gathering_data_programs_list = account_balance_programs + raw_data_lists + processed_data_program + trade_monitoring_programs + strategy_programs + orderbook_monitoring_programs
+gathering_programs_list = trade_sys_start_programs + account_balance_programs + raw_data_lists + processed_data_program + trade_monitoring_programs + strategy_programs + orderbook_monitoring_programs
 
 
 
 
 """ALL PROGRAMS TO BE RUN"""
-programs = gathering_data_programs_list #+ processing_data_programs_list
+programs = gathering_programs_list 
 
 #UI INTERFACE
 
 # Create a function to run the programs
 def run_programs():
+    """ [1] CREATE .DB FILE WITH ALL THE CURRENTLY RUNNING PROGRAMS, FILE OF PROC"""
+    main_program_tasks = f"0-Run/RunTime_Tools/Data_Files/Task_Manager.db"
+    connection = sqlite3.connect(main_program_tasks)
+    cursor = connection.cursor()
+
+
     environment = ".venv\Scripts\python.exe" # For virtual environment #"python" - > Defaullt
     for program in programs:
         # Run the program using the subprocess module
         proc = subprocess.Popen([environment, program])
-        print(proc)
         # Store the process in a list
         processes.append(proc)
         # Update the list of running files
         running_files.set("\n".join([proc.args[1] for proc in processes]))
         
+        # [2] Sending list of programs to database
+        #Creating Table
+        cursor.execute(f"""INSERT INTO Tasks (Process_Name, PID) VALUES ("{proc.args[1]}", "{proc.pid}")""")
+        connection.commit()
+        #Closing the database
+
         sleep(1) #Waits 0.5 second between starting every program
-        
+    
+    connection.close()
 
 # Create a function to terminate the programs
 def terminate_programs():
-    for proc in processes:
+    # [1] Connect to db file
+    main_program_tasks = f"0-Run/RunTime_Tools/Data_Files/Task_Manager.db"
+    connection = sqlite3.connect(main_program_tasks)
+    cursor = connection.cursor()
+    
+    # [2] Loop through database of processes and stop them
+    cursor.execute("Select * FROM Tasks")
+    program_process_list = cursor.fetchall()
+
+    for i in range(len(program_process_list)):
+        pid = program_process_list[i][1]
+        kill(int(pid), SIGTERM)
+    
+    # [3] Close the connection and delete the task file
+    connection.close()
+    remove(main_program_tasks) 
+
+
+    """for proc in processes:
         # Terminate the process
         print(proc)
-        proc.terminate()
+        proc.terminate()"""
     # Clear the list of running files
     running_files.set("")
+    processes.clear() # Removes previous processes from the list
 
 # Create a list to store the running processes
 processes = []
@@ -366,8 +408,60 @@ run_button.pack()
 terminate_button = tk.Button(root, text="Terminate Programs", command=terminate_programs)
 terminate_button.pack()
 
-# Start the GUI event loop
-root.mainloop()
+""" Creates the database files required for monitoring the runtime of the program"""
+class create_database_files:
+    # Initialising variables
+    def __init__(self, file_name):
+        self.file_name = file_name
+
+    def program_timings(self):
+        #Defining Connection and cursor
+        connection = sqlite3.connect(self.file_name)
+        cursor = connection.cursor()
+        #Creating Table
+        command1 = """CREATE TABLE IF NOT EXISTS
+        times(Start_Timestamp TEXT, Last_Updated TEXT)"""
+        cursor.execute(command1)
+        current_timestamp = round(time())
+        cursor.execute(f"""INSERT INTO times (Start_Timestamp) VALUES ({current_timestamp})""")
+        connection.commit()
+        #Closing the database
+        connection.close()
+
+    def live_programs(self):
+        #Defining Connection and cursor
+        connection = sqlite3.connect(self.file_name)
+        cursor = connection.cursor()
+        #Creating Table
+        command1 = """CREATE TABLE IF NOT EXISTS
+        Tasks(Process_Name TEXT, PID TEXT)"""
+        cursor.execute(command1)
+        connection.commit()
+        #Closing the database
+        connection.close()
+
+
+
+def start_crypto_bot():
+    #while 1:
+    """ [1] Create .db file for main """
+    # [1.1] Create .db for time program was started 
+    main_time_file_name = f"0-Run/RunTime_Tools/Data_Files/Main_program_timings.db"
+    create_database_files(main_time_file_name).program_timings()
+
+    # [1.2] Create .db for the all the programs run for the algo
+    main_program_tasks = f"0-Run/RunTime_Tools/Data_Files/Task_Manager.db"
+    create_database_files(main_program_tasks).live_programs()
+
+    
+    """ [2] Start the GUI event loop """
+    root.mainloop()
+    
+    """ [3] Deleted .db file for main program timings """
+    remove(main_time_file_name)
+
+# Runs the program
+start_crypto_bot()
 
 
 
