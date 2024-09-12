@@ -164,19 +164,21 @@ class order:
 # Variables
 trading_pair = "BTCUSDT"
 exchange_name = "Binance"
-flag = 1
-side = "LONG"
-equity = 15 #0.00203 # Needs to be the BTC amount or ETH, for example, not USDT
+flag = 0
+side = "SHORT"
+equity = 5.5*(10**(-11)) #0.00203 # Needs to be the BTC amount or ETH, for example, not USDT
 chart_interval = "5m"
 db_name = "Strategy2_Orders"
 
 
 
 # Functions
-main = order(trading_pair, exchange_name, flag, side, equity, chart_interval, db_name)'''
+main = order(trading_pair, exchange_name, flag, side, equity, chart_interval, db_name)
 
-#print(main.market_order())
+print(main.market_order())
 
 #print(main.get_equity())
 
 #main.Ready_update_orderbook(2)
+
+'''
