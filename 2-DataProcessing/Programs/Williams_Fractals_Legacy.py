@@ -104,7 +104,7 @@ def Willian_Fractal(trading_pair, exchange_name, chart_interval, indicator_inter
 
     #Bearish Fractals = -1
     bearish_middle_set = data_set[N][2]
-    usable_dataset = data_set
+    usable_dataset = data_set.copy()
     usable_dataset.pop(N) # Removes middle set from set being compared
     bearish_high_data = []
     for i in range(len(usable_dataset)):
