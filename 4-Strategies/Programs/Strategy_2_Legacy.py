@@ -212,7 +212,7 @@ def strategy(trading_pair, exchange_name, chart_interval, emaL1_interval, emaL2_
 def printTodatabase(trading_pair, exchange_name, chart_interval, emaL1_interval, emaL2_interval, emaL3_interval,
              emaS1_interval, emaS2_interval, emaS3_interval, rsi_interval, leverage, L_TP, S_TP, 
              L_SL, S_SL, flag, tradeable_fund_Percentage, db_name = "Strategy2_Orders",
-             Strategy_Name = "Strategy_2", low_USDT_balance = 100):
+             Strategy_Name = "Strategy_2", low_USDT_balance = 5):
     
     # Getting file name
     date_and_time_db = (datetime.now())
