@@ -1,16 +1,16 @@
 import tkinter as tk
 import sqlite3
-from os import remove, kill
+from os import remove, kill, path
 import subprocess
 from time import sleep, time
-from sys import path
+from sys import path as sys_path
 from signal import SIGTERM
 
 ####################################################################################
 # [0] Getting System Config
 ####################################################################################
 # Changing Path
-path.append("0-Settings/Program_Files/Misc/")
+sys_path.append("0-Settings/Program_Files/Misc/")
 from read_config import run # User Defined Function
 program_settings = run()
 
@@ -59,7 +59,7 @@ flag = program_settings["application_settings"]['trading_environment']['flag'] #
 
 
 # [D] CREATING FOLDERS
-path.append("0-Run")
+sys_path.append("0-Run")
 from Setup import start_1, start_2, start_3, start_4, start_5
 
 #[1.1] Creates folders for data storage
@@ -78,7 +78,7 @@ from config_files.Data_Gathering_file_C import create_data_gathering
 create_data_gathering(pair_list, config_ti, limit, levels)
 
 #[1.3] Creates pdb file for strats
-path.append("4-Strategies/Programs/")
+sys_path.append("4-Strategies/Programs/")
 from Strategy_2_Legacy import creating_db_file
 strat_db_list = program_settings["application_settings"]["strategies"]
 for i in range(len(strat_db_list)):
@@ -443,14 +443,24 @@ class create_database_files:
 
 
 def start_crypto_bot():
-    #while 1:
+    """ [0] Delete orevious system start db files"""
+    # [0.1] File Names
+    main_time_file_name = f"0-Run/RunTime_Tools/Data_Files/Main_program_timings.db"
+    main_program_tasks = f"0-Run/RunTime_Tools/Data_Files/Task_Manager.db"
+
+    db_start_names_list = [main_time_file_name, main_program_tasks]
+
+    # [0.2] For loop to see if file exists and if it does, deletes it
+    for i in range(len(db_start_names_list)):
+        if path.exists(db_start_names_list[i]):
+            remove(db_start_names_list[i])
+        else: pass # Do Nothing
+
     """ [1] Create .db file for main """
     # [1.1] Create .db for time program was started 
-    main_time_file_name = f"0-Run/RunTime_Tools/Data_Files/Main_program_timings.db"
     create_database_files(main_time_file_name).program_timings()
 
     # [1.2] Create .db for the all the programs run for the algo
-    main_program_tasks = f"0-Run/RunTime_Tools/Data_Files/Task_Manager.db"
     create_database_files(main_program_tasks).live_programs()
 
     
