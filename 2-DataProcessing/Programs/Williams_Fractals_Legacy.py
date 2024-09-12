@@ -3,7 +3,6 @@ from os.path import exists
 from sys import path
 import sqlite3
 import time
-from statistics import median
 
 #CREATES A DATABASE FILE - WORKING
 def creating_db_file(trading_pair, exchange_name, chart_interval):    
@@ -30,20 +29,6 @@ def creating_db_file(trading_pair, exchange_name, chart_interval):
 
     #Closing the database
     connection.close()
-#Checks to see if inputted number is a prime number
-def is_prime(n):
-    if n <= 1:
-        return False
-    for i in range(2, int(n ** 0.5) + 1):
-        if n % i == 0:
-            return False
-    return True
-#Gets the next prime number
-def next_prime(n):
-    while True:
-        n += 1
-        if is_prime(n):
-            return n
 
 #GATHERS THE HISTORICAL DATA OF A CERTAIN NUMBER OF KLINES - WORKING
 def get_historical_data(trading_pair, exchange_name, chart_interval, indicator_interval):
@@ -57,16 +42,12 @@ def get_historical_data(trading_pair, exchange_name, chart_interval, indicator_i
     cursor.execute("Select * FROM pair_price")
     
     list_check = cursor.fetchall()
-    
-    #COMES OUT as a LIST
-    data_range = next_prime(indicator_interval) + 2
-    recent_log = list_check[-(data_range-1):] #Most Recent data gathered from file
   
     connection.commit()
     #Closing the database
     connection.close()
 
-    return recent_log
+    return list_check
 #GATHERS THE CURRENT DATA OF A CERTAIN NUMBER OF KLINES - WORKING
 def get_current_data(trading_pair, exchange_name, chart_interval):
     date_and_time = (datetime.now())
@@ -90,42 +71,55 @@ def get_current_data(trading_pair, exchange_name, chart_interval):
     return [recent_log]
 #Determines whether a Williams fractal has occurred within a specific  - WORKING
 def Willian_Fractal(trading_pair, exchange_name, chart_interval, indicator_interval):
+    """ [1] Importing and Initialising Variables"""
+    # [1.0] Importing variables from previous functions
+    window = indicator_interval 
     historical_data = get_historical_data(trading_pair, exchange_name, chart_interval, indicator_interval)
     current_data = get_current_data(trading_pair, exchange_name, chart_interval)
 
+    # [1.1] Initialising Variables
     data_set = historical_data + current_data
-    #print(data_set)
-    list_length = len(data_set)
-    #Setting up calculation to find the middle most number from the ranger
-    range_1 = range(0,list_length)
-    placement_list = list(range_1)
+    lookback_window = window * 2 + 1
+    lookback_dataset = data_set[-lookback_window:]
 
-    N = median(placement_list)
-
-    #Bearish Fractals = -1
-    bearish_middle_set = data_set[N][2]
-    usable_dataset = data_set.copy()
-    usable_dataset.pop(N) # Removes middle set from set being compared
-    bearish_high_data = []
-    for i in range(len(usable_dataset)):
-        bearish_high_data.append(usable_dataset[i][2])
-
-    #Bullish Fractals = 1
-    bullish_middle_set = data_set[N][3]
-    Bullish_low_data = []
-    for i in range(len(usable_dataset)):
-        Bullish_low_data.append(usable_dataset[i][3])
+    # [1.2] Getting List of High Prices
+    high_list = []
+    for i in range(len(lookback_dataset)):
+        high_list.append(lookback_dataset[i][2])
     
-    #Final Analysis
-    if bullish_middle_set < min(Bullish_low_data): #Bullish Conditions
-        return 1 #1 is Bullish
-    
-    elif bearish_middle_set > max(bearish_high_data): #Bearish Conditions
-        return -1 #-1 is Bearish
+    # [1.3] Getting List of Low Prices
+    low_list = []
+    for i in range(len(lookback_dataset)):
+        low_list.append(lookback_dataset[i][3])
 
-    else:
+    
+    """ [2] Calculating WF """
+    fractal_data = []
+    for i in range(len(high_list)):
+        if i < window or i > len(high_list) - window:
+            fractal_data.append(0)
+
+        else:
+            #Bearish fractal = -1
+            if all(high_list[i] > high_list[i+j] for j in range(-window, window) if j != 0):
+                fractal_data.append(-1)
+            
+            #Bullish fractal = 1
+            elif all(low_list[i] < low_list[i+j] for j in range(-window, window) if j != 0):
+                fractal_data.append(1)
+
+            else: #No fractal = 0
+                fractal_data.append(0)
+
+    fractal_data = [0] * window + fractal_data[:-window]
+    current_fractal = fractal_data[-1]
+    
+    # 3 Returing the value of the function
+    if current_fractal == 0:
         return None
-        
+    else:
+        return current_fractal
+    
 
 #PRINT WF DATA TO DATABASE - WORKING
 def printTodatabase(trading_pair, exchange_name, chart_interval, indicator_interval):
@@ -244,6 +238,6 @@ def run(trading_pair, exchange_name, chart_interval, indicator_interval):
 
 
 
-#(run("BTCUSDT", "ByBit", 1, 2))
+#(run("BTCUSDT", "Binance", "5m", 3))
 
 
