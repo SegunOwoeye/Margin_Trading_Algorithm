@@ -80,6 +80,7 @@ class pair_balance:
                     
                     list_check = cursor.fetchall()
                     recent_log = list_check[-1] #Most Recent data gathered from file
+                    #print(recent_log)
                 
                     connection.commit()
                     #Closing the database
@@ -90,7 +91,7 @@ class pair_balance:
                 error_file_name = f"4-Strategies/Programs/{self.trading_pair}/Strategy_2_{self.trading_pair}interval={self.chart_interval}.py"
                 print(F"{error_file_name}: {e}")
 
-
+        #print(balance_list)
         return balance_list
 
     ### GETS THE BALANCE INFO FROM EITHER THE DEMO OR THE LIVE ACCOUNT
@@ -182,10 +183,10 @@ class calculating_markers:
         precision = 0
         for i in range(len(pairs)):
             if (pairs[i] == "USDT" and self.side == "LONG"): 
-                balance = pair_balance(self.trading_pair, self.exchange_name, self.chart_interval, self.flag).flag_balance()[0]
+                balance = pair_balance(self.trading_pair, self.exchange_name, self.chart_interval, self.flag).flag_balance()[1]
                 precision = precision_data[2]
             elif self.side == "SHORT" and pairs[i] == "USDT":
-                balance = pair_balance(self.trading_pair, self.exchange_name, self.chart_interval, self.flag).flag_balance()[0]
+                balance = pair_balance(self.trading_pair, self.exchange_name, self.chart_interval, self.flag).flag_balance()[1]
                 precision = precision_data[2]
             else: pass 
         ### NEED TO FIND THE PRECISION OF ALL ASSETS
@@ -302,6 +303,6 @@ class calculating_markers:
 # TESTING
 
 
-#print(calculating_markers("BTCUSDT", "Binance", "5m", 1, 3, 0.8, 0.5,0.7, 1.0, 50, "LONG").get_stop_limit_price())
-
+#print(calculating_markers("BTCUSDT", "Binance", "5m", 0, 3, 0.8, 0.5,0.7, 1.0, 50, "LONG").get_stop_limit_price())
+#print(calculating_markers("BTCUSDT", "Binance", "5m", 0, 3, 0.8, 0.5,0.7, 1.0, 50, "LONG").tradable_funds())
 #print(calculating_markers("BTCUSDT", "Binance", "5m", 1, 3, 0.8, 0.5,0.7, 1.0, 50, "SHORT").tradable_funds())
