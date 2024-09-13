@@ -48,27 +48,43 @@ class order:
         # Close Price
         closeing_price = recent_log[4]
         return closeing_price
+    
+    def round_entry_exit(self):
+        # Rounding entry and exit prices to the amount of significant figures determined by the asset precision
+        if "BTC" in self.trading_pair:
+            take_profit = round(self.TP,2)
+            stop_loss = round(self.Stop_Loss,2)
+            stop_limit = round(self.Stop_limit,2)
 
+        values = {"TP": take_profit, "Stop_Loss": stop_loss, "Stop_Limit": stop_limit}
+        return values
+
+            
     
     
     # Places a market order
     def OCO_order(self):
+        # Initialising values
+        entry_exit_prices = self.round_entry_exit()
+        take_profit = entry_exit_prices['TP']
+        stop_loss = entry_exit_prices['Stop_Loss']
+        stop_limit = entry_exit_prices['Stop_Limit']
+
         # Setting Side for binance
         """ Since the origional side was LONG/SHORT the OCO side in the opposite direction needs to be SHORT/LONG"""
         if self.side == "LONG":
             side = "SELL"
         elif self.side == "SHORT":
             side = "BUY"
-        
 
         params = {
             "symbol": self.trading_pair,
             "isIsolated": "FALSE",
             "side": side,
             "quantity": self.asset_equity,
-            "price": self.TP,
-            "stopPrice": self.Stop_Loss,
-            "stopLimitPrice": self.Stop_limit,
+            "price": take_profit,
+            "stopPrice": stop_loss,
+            "stopLimitPrice": stop_limit,
             "sideEffectType": "MARGIN_BUY",
             "stopLimitTimeInForce": "GTC",
             "sideEffectType": "AUTO_REPAY",
@@ -83,7 +99,6 @@ class order:
             from Binance_Rest_Api import run
 
             # print("Live Trade")
-            
             method = "POST"
             path = "/sapi/v1/margin/order/oco"
             r_type = 0 # Private request
