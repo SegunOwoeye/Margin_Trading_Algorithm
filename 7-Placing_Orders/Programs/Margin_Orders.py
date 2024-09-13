@@ -107,12 +107,12 @@ class order:
             
             purchase_data = {
                 "symbol": self.trading_pair,
-                "orderID": int(round(time() * 1000, 0)),
+                "orderId": int(round(time() * 1000, 0)),
                 "transactTime": int(round(time() * 1000, 0)),
                 "executedQty": str(asset_equity),
                 "fills": [{
                     "price": str(self.get_current_price()),
-                    "commision": str(asset_equity * (0.1/100))
+                    "commission": str(asset_equity * (0.1/100))
                     
                 }]
             }
@@ -123,11 +123,11 @@ class order:
     def Ready_update_orderbook(self, orderbook_pos):
         order_data = self.market_order() # Places a market order and returns the data
         # Setting Up Variables to be added/ Ammended to orderbook
-        orderID = order_data["orderID"]
+        orderID = order_data["orderId"]
         Entry_Time = order_data['transactTime'] # In milliseconds
         Entry_Price = order_data['fills'][0]['price']
         Order_Funds_qty = order_data["executedQty"]
-        Entry_Fee = order_data['fills'][0]['commision']
+        Entry_Fee = order_data['fills'][0]['commission']
         status = "Entered"
 
         # Getting file name
