@@ -1,7 +1,7 @@
 from datetime import datetime
 import sqlite3
 from time import time
-from sys import path
+import sys 
 from os.path import exists
 
 
@@ -112,10 +112,10 @@ class order_Monitoring:
                 from Binance_Rest_Api import run
                 
                 method = "GET"
-                path = "/sapi/v1/margin/order"
+                url_path = "/sapi/v1/margin/order"
                 r_type = 0 # Private request
 
-                purchase_data = run(method, path, params, r_type)
+                purchase_data = run(method, url_path, params, r_type)
 
                 # LOOK FOR STATUS: FILLED
                 OCO_status = purchase_data['status']
@@ -222,7 +222,7 @@ class order_Monitoring:
 
 
         """ SENDING EMAIL NOTIFICATION"""
-        path.append("YY_Notifications/Programs") 
+        sys.path.append("YY_Notifications/Programs") 
         from email_notification import email_alert 
         subject = f"Closing {self.trading_pair} Order Made at {update_ID[0]}"
         message = (f"The order was closed at {exit_price} USDT achieving a percentage change of {perc_change}")
