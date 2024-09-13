@@ -7,3 +7,4 @@
 0-TEST/test1.py
 0-TEST/test1.py
 0-Settings/test.py
+*.pyc
