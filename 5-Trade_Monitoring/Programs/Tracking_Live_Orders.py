@@ -87,7 +87,6 @@ class order_Monitoring:
             side = "SELL"
         elif self.side == "SHORT":
             side = "BUY"
-        
         # Getting order IDs
         specific_order = self.get_orderbook(order_position)
         TP_OrderID = specific_order[24]
@@ -96,7 +95,6 @@ class order_Monitoring:
         OCO_OrderID_list = [TP_OrderID, SL_OrderID] 
         
         # OCO_OrderID_list = [28383468798, 28383468799, 28387387594] # DEMO
-
         for i in range(len(OCO_OrderID_list)):
             params = {
                 "symbol": self.trading_pair,
@@ -105,7 +103,6 @@ class order_Monitoring:
                 "timestamp": int(round(time() * 1000, 0))
 
             }
-            
             """ Flag = 0 (Live) | Flag = 1 (Demo)"""
             if self.flag == 0: #0:
                 sys.path.append("Misc/Programs")
@@ -116,7 +113,6 @@ class order_Monitoring:
                 r_type = 0 # Private request
 
                 purchase_data = run(method, url_path, params, r_type)
-
                 # LOOK FOR STATUS: FILLED
                 OCO_status = purchase_data['status']
                 
@@ -180,10 +176,10 @@ class order_Monitoring:
         if order_data == None: # Do Nothing
             return
         # Setting Up Variables to be added/ Ammended to orderbook
-        C_funds_traded = order_data[0]
-        exit_time = order_data[1] 
-        exit_price = order_data[2]
-        exit_fee = order_data[3]
+        C_funds_traded = float(order_data[0])
+        exit_time = float(order_data[1])
+        exit_price = float(order_data[2])
+        exit_fee = float(order_data[3])
         status = "Closed"
 
         # Getting file name based on environment
