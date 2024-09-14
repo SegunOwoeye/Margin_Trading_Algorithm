@@ -341,7 +341,7 @@ def run_programs():
     cursor = connection.cursor()
 
 
-    environment = ".venv\Scripts\python.exe" # For virtual environment #"python" - > Defaullt
+    environment = ".venv/Scripts/python.exe" # For virtual environment #"python" - > Defaullt
     for program in programs:
         # Run the program using the subprocess module
         proc = subprocess.Popen([environment, program])
