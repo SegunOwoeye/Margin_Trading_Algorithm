@@ -11,3 +11,4 @@
 /1-DataGathering/Programs/__pycache__
 /2-DataProcessing/Programs/__pycache__
 .DS_Store
+/.macvenv
