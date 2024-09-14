@@ -5,6 +5,7 @@ import subprocess
 from time import sleep, time
 from sys import path as sys_path
 from signal import SIGTERM
+from platform import system
 
 ####################################################################################
 # [0] Getting System Config
@@ -340,8 +341,12 @@ def run_programs():
     connection = sqlite3.connect(main_program_tasks)
     cursor = connection.cursor()
 
-
-    environment = ".venv/Scripts/python.exe" # For virtual environment #"python" - > Defaullt
+    """ [2] Changing environment depending on operating system"""
+    current_system = system()
+    if current_system == "Windows":
+        environment = ".venv/Scripts/python.exe" # For virtual environment #"python" - > Defaullt
+    else:
+        environment=""
     for program in programs:
         # Run the program using the subprocess module
         proc = subprocess.Popen([environment, program])
