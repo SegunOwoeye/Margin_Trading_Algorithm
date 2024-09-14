@@ -5,11 +5,9 @@
 *.db-journal
 *.csv
 0-TEST/test1.py
-0-TEST/test1.py
 0-Settings/test.py
 *.pyc
 /1-DataGathering/Programs/__pycache__
 /2-DataProcessing/Programs/__pycache__
 .DS_Store
-/.macvenv
 /macvenv
