@@ -1,9 +1,11 @@
-trading_pairs = ["BTCUSDT", "ETHUSDT", "ARBUSDT"]
+from platform import system
 
-asset_pairs = []
-for i in range(len(trading_pairs)):
-    asset_name = trading_pairs[i].replace("USDT", "")
-    asset_pairs.append(asset_name)
+def os_path_change(path):
+    # [1] Determining the current system, assumes only windows or mac
+    current_system = system()
 
-asset_pairs.append("USDT")
-print(asset_pairs)
+    if current_system == 
+
+
+s = system()
+print(s)
