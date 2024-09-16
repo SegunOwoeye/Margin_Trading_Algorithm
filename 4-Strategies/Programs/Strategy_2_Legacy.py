@@ -231,11 +231,12 @@ def printTodatabase(trading_pair, exchange_name, chart_interval, emaL1_interval,
             signal = strategy(trading_pair, exchange_name, chart_interval, emaL1_interval, emaL2_interval, emaL3_interval,
                     emaS1_interval, emaS2_interval, emaS3_interval, rsi_interval)
             
-            #signal = -1
 
             # [0] Gathering the Date and time 
             date_and_time = (datetime.now())
             date = date_and_time.strftime("%m/%d/%Y, %H:%M:%S") #[0] Date
+
+            #signal = -1
 
             if abs(signal) == 1:
             
@@ -253,7 +254,7 @@ def printTodatabase(trading_pair, exchange_name, chart_interval, emaL1_interval,
                 
                 tradeing_funds = calc_marker.tradable_funds()
                 # [5] Account balance to trade
-                balances = pair_balance(trading_pair, exchange_name, chart_interval, flag).flag_balance()[0] # ["BTC", "USDT"]
+                balances = pair_balance(trading_pair, exchange_name, chart_interval, flag).flag_balance()[1] # ["BTC", "USDT"]
                 # [4] Leverage
                 Leverage = leverage
                 # [5] Equity
@@ -283,7 +284,6 @@ def printTodatabase(trading_pair, exchange_name, chart_interval, emaL1_interval,
                     asset_name = asset_pair
 
 
-
                 """ SENDING EMAIL NOTIFICATION"""
                 path.append("YY_Notifications/Programs") 
                 from email_notification import email_alert 
@@ -291,7 +291,6 @@ def printTodatabase(trading_pair, exchange_name, chart_interval, emaL1_interval,
                 message = (f"A {side} {Order_type} order has been placed for {Equity} {asset_name} on a {Leverage}x Leverage using {Account_Balance_Traded} {asset_name} with a " + 
                            f"target price of {Target_Price} {base_pair} for {Strategy_Name}")
                 email_recipient = "aces.cryptotrading@gmail.com"
-                
                 
 
                 """ Sending Order Details to Orderbook """
@@ -304,13 +303,11 @@ def printTodatabase(trading_pair, exchange_name, chart_interval, emaL1_interval,
                 list_check = cursor.fetchall()
                 #recent_log = list_check[-1]
 
-                
                 """ Impliment method for determining traded funds for the asset"""
                 
                 path.append("ZZ-General_Functions/Programs")
                 from Interval_to_time import convert
                 duplicate_time = convert(chart_interval) * 4
-
                 
                 # If the orderbook is empty
                 if not list_check:
