@@ -51,7 +51,7 @@ class Live_Balance:
         method = "GET"
         request_path = "/sapi/v1/margin/account"
         r_type = 0 # Private request
-
+        
         Balance_Data_list = run(method, request_path, params, r_type)['userAssets']
         
         # Searching List for Specific Pair
@@ -128,7 +128,7 @@ class Live_Balance:
 
 
 """ [2] RUNS THE PROGRAM """   
-def run(trading_pair, exchange_name, db_name, wait_time = 1):
+def run(trading_pair, exchange_name, db_name, wait_time = 5):
     while 1:
         try:
             # [1] GETTING THE CURRENT BALANCE FROM THE EXCHANGE
@@ -158,11 +158,11 @@ exchange_name = "Binance"
 db_name = "Live_Balance"
 
 # Creating a new instance of the class
-#main = Live_Balance(trading_pair, exchange_name, db_name)
+main = Live_Balance(trading_pair, exchange_name, db_name)
 
-# main.creating_db_file() -> WORKING
-# print(main.get_Balance_Info()) -> WORKING
+# main.creating_db_file() # -> WORKING
+# print(main.get_Balance_Info()) # -> WORKING
 # main.printTodatabase() -> WORKING
 
-run(trading_pair, exchange_name, db_name)
+# run(trading_pair, exchange_name, db_name)
 '''
