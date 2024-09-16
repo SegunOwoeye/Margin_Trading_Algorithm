@@ -74,7 +74,7 @@ class restart_algo:
             og_progrms_list = program_process_list.copy
 
             # [2.2.3] Filterng the list to remove essential processes from terminating
-            filters = ["0-Run/RunTime_Tools/Restart_[Start(Main)].py"]
+            filters = ["0-Run/RunTime_Tools/Restart_[Start(Main)].py", "ZZ-General_Functions/Programs/Delete_Files.py"]
             captured_ls = []
             for n in range(len(filters)):
                 try:
