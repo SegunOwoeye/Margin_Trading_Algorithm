@@ -104,8 +104,8 @@ class pair_balance:
 # Class for calculating Markers based on order conditions
 class calculating_markers:
     #Initialises variables for use through the class
-    def __init__(self, trading_pair, exchange_name, chart_interval, flag, leverage, L_TP, S_TP, 
-                 L_SL, S_SL, tradable_funds_percentage, side):
+    def __init__(self, trading_pair: str, exchange_name: str, chart_interval: str, flag: int, leverage, L_TP: float, S_TP: float, 
+                 L_SL: float, S_SL: float, tradable_funds_percentage, side: str):
         self.trading_pair = trading_pair
         self.exchange_name = exchange_name
         self.flag = flag
