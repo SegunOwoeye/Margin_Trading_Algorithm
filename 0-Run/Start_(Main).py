@@ -294,7 +294,7 @@ def orderbook_monitoring_file_lists():
 # [8] Core Programs
 ####################################################################################
 def core_programs_list():
-    program_name = ["0-Run/RunTime_Tools/Restart_[Start(Main)].py"]
+    program_name = ["0-Run/RunTime_Tools/Restart_[Start(Main)].py", "ZZ-General_Functions/Programs/Delete_Files.py"]
     return program_name
 
 
@@ -346,7 +346,7 @@ def run_programs():
     if current_system == "Windows":
         environment = ".venv/Scripts/python.exe" # For virtual environment #"python" - > Defaullt
     else:
-        environment=""
+        environment="macvenv/bin/python3"
     for program in programs:
         # Run the program using the subprocess module
         proc = subprocess.Popen([environment, program])
