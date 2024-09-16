@@ -13,3 +13,4 @@
 .DS_Store
 /.macvenv
 /macvenv
+/0-Run/config_files/__pycache__
