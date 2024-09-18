@@ -1,7 +1,7 @@
 import os
 from time import sleep
 
-
+"""WIP"""
 
 def mass_del(extension_type, search="ALL"):
     # Get the current directory
