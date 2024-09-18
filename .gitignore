@@ -23,3 +23,4 @@
 /0-Run/config_files/__pycache__
 /0-Run/__pycache__
 6-DynamicBacktesting/data_gathered/BTCUSDT/raw_output5m.csv
+6-DynamicBacktesting/Programs/BTCUSDT/test.py
