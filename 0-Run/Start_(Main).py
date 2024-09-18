@@ -377,8 +377,13 @@ def terminate_programs():
     program_process_list = cursor.fetchall()
 
     for i in range(len(program_process_list)):
-        pid = program_process_list[i][1]
-        kill(int(pid), SIGTERM)
+        # Terminate the process using the os module
+        try: 
+            pid = program_process_list[i][1]
+            kill(int(pid), int(SIGTERM))
+        except Exception as e: # Handles error that occurs for programs that aren't set in while loops
+            if PermissionError == type(e):
+                pass
     
     # [3] Close the connection and delete the task file
     connection.close()
@@ -477,10 +482,4 @@ def start_crypto_bot():
 
 # Runs the program
 start_crypto_bot()
-
-
-
-
-
-
 
