@@ -140,9 +140,9 @@ def wf_cofirmation(trading_pair, exchange_name, chart_interval, indicator_interv
 
 """ [3] DETERMINES IF ALL THE CONDITIONS FOR TRIGGERING A LONG/ SHORT SIGNAL HAVE BEEN MET """
 def strategy(trading_pair, exchange_name, chart_interval, emaL1_interval, emaL2_interval, emaL3_interval,
-             emaS1_interval, emaS2_interval, emaS3_interval, rsi_interval):
+             emaS1_interval, emaS2_interval, emaS3_interval, rsi_interval, record_signal=True):
     try:
-        """GATHERING SIGNALS - W"""
+        """ [1] GATHERING SIGNALS - W"""
         # WF signal 
         wf_signal = WF_read(trading_pair, exchange_name, chart_interval)
         # EMA value Long
@@ -174,16 +174,19 @@ def strategy(trading_pair, exchange_name, chart_interval, emaL1_interval, emaL2_
 
         total_signals = wf_signal + ema_signal + rsi_signal + wfc_signal
         
-        """"""
-        # For testing
-        message = f"{total_signals}"# For testing
-        # RECORDING ERROR
-        program_name = f"4-Strategies/Programs/{trading_pair}/Strategy_2_{trading_pair}interval={str(chart_interval)}.py"
-        path.append("00-Run_Log/Programs")
-        from Log_Output import Record_Output
-        Record_Output(trading_pair, exchange_name, message, program_name)
-        sleep(1)
-        """"""
+        # [2] Recording Signals to a txt file of required, otherwise it won't        
+        if record_signal == True:
+            # For testing
+            message = f"{total_signals}"# For testing
+            # RECORDING ERROR
+            program_name = f"4-Strategies/Programs/{trading_pair}/Strategy_2_{trading_pair}interval={str(chart_interval)}.py"
+            path.append("00-Run_Log/Programs")
+            from Log_Output import Record_Output
+            Record_Output(trading_pair, exchange_name, message, program_name)
+            sleep(1)
+        else:
+            pass
+        
         
         # COMBINED SIGNAL PROCESSING
         if total_signals == 4: # Go long
