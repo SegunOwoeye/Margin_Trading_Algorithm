@@ -139,7 +139,7 @@ def printTodatabase(trading_pair, exchange_name, chart_interval, indicator_inter
 
             sleep_timer = chart_interval.lower()
             if "m" in sleep_timer: 
-                sleep_interval = int(sleep_timer.replace("m", ""))
+                sleep_interval = int(sleep_timer.replace("m", "")) 
                 wait_time = (sleep_interval - minutes_past % sleep_interval) * 60 - seconds_past
             elif "h" in sleep_timer: 
                 sleep_interval = int(sleep_timer.replace("h", ""))
@@ -157,7 +157,7 @@ def printTodatabase(trading_pair, exchange_name, chart_interval, indicator_inter
                 cursor = connection.cursor()
 
                 current_time = (datetime.now())
-                formatted_time = str(current_time.strftime('"%H:%M:%S.%f"'))
+                formatted_time = str(current_time.strftime('"%H:%M:%S"'))
                 cursor.execute(f"""INSERT INTO processed_data (time, Fractal_Type) VALUES ({formatted_time}, 0)""")
 
                 connection.commit()
@@ -171,7 +171,7 @@ def printTodatabase(trading_pair, exchange_name, chart_interval, indicator_inter
                 cursor = connection.cursor()
 
                 current_time = (datetime.now())
-                formatted_time = str(current_time.strftime('"%H:%M:%S.%f"'))
+                formatted_time = str(current_time.strftime('"%H:%M:%S"'))
                 cursor.execute(f"""INSERT INTO processed_data (time, Fractal_Type) VALUES ({formatted_time}, {(WF)})""")
 
                 connection.commit()
