@@ -310,7 +310,7 @@ def printTodatabase(trading_pair, exchange_name, chart_interval, emaL1_interval,
                 
                 path.append("ZZ-General_Functions/Programs")
                 from Interval_to_time import convert
-                duplicate_time = convert(chart_interval) * 4
+                duplicate_time = convert(chart_interval) * 12
                 
                 # If the orderbook is empty
                 if not list_check:
