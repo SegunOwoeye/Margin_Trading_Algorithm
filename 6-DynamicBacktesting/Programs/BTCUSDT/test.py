@@ -1,11 +1,13 @@
 from requests import get
 import pandas as pd
 import datetime
-import vectorbt as vbt
+#import vectorbt as vbt
 import numpy as np
 from sys import path
 from os.path import exists
 import time
+from os import system as terminal_sys
+from vectorbt import Portfolio
 
 
 # Custom indicators
@@ -163,6 +165,7 @@ def data_gathering(trading_pair, chart_interval, bt_days, limit):
         df.to_csv(file_name, mode='a', header=False ,index=True)
 
 
+# Custom
 def get_signals(trading_pair, chart_interval, rsi_window, ema1_window, ema2_window, 
                 ema3_window, hm_spaceing, metric):
     
@@ -192,13 +195,11 @@ def get_signals(trading_pair, chart_interval, rsi_window, ema1_window, ema2_wind
     
     return wf.value, ema_cross.value, rsi_dir.value, wf_cap.value
 
+#####################################################################################
 
-
-
-def bt_strategy2(trading_pair, chart_interval, short_rsi_window, short_ema1_window, short_ema2_window, 
+def it_bt(trading_pair, chart_interval, short_rsi_window, short_ema1_window, short_ema2_window, 
                 short_ema3_window, long_rsi_window, long_ema1_window, long_ema2_window, 
-                long_ema3_window, hm_spaceing, metric, flag=None):
-    #Gathering signals
+                long_ema3_window, hm_spaceing, metric, sl, tp):
     #Short
     short_signals = get_signals(trading_pair, chart_interval, short_rsi_window, short_ema1_window, short_ema2_window, 
                 short_ema3_window, hm_spaceing, metric)
@@ -234,56 +235,45 @@ def bt_strategy2(trading_pair, chart_interval, short_rsi_window, short_ema1_wind
     high_price = price_data(trading_pair, chart_interval, name="high")
     low_price = price_data(trading_pair, chart_interval, name="low")
 
+    #Short
+    portfolio_short = Portfolio.from_signals(close_price, tp_stop=tp, open=open_price, #0.4
+                                        high=high_price, low=low_price, short_entries=short_entries,
+                                        sl_stop=sl)#, 0.8 fees=0.075/100)
+    #terminal_sys("cls")
     
-    #Cominations
-    if flag == "optimise":
-        entry_points = np.linspace(20,30, num=hm_spaceing)
-        exit_points = np.linspace(75,85, num=hm_spaceing)
 
-        grid = np.array(np.meshgrid(entry_points, exit_points)).T.reshape(-1,2)
-        
-        #Variable Points
-        entries = rsi.rsi_crossed_below(list(grid[:,[0]]))
-        exits = rsi.rsi_crossed_above(list(grid[:,[1]]))
+    pfs_stats = portfolio_short.stats()
+    #print(pfs_stats)
 
-        portfolio = vbt.Portfolio.from_signals(close_price, entries, exits, fees=0.075/100)
+    total_returns = pfs_stats['Total Return [%]']
+    win_rate = pfs_stats['Win Rate [%]']
+    total_trades = pfs_stats['Total Closed Trades']
 
-        pf_perf = portfolio.deep_getattr(metric)
-        pf_perf_matrix = pf_perf.vbt.unstack_to_df(index_levels = "rsi_crossed_above",
-                                                column_levels = "rsi_crossed_below") #, symmetric = True)
-        pf_perf_matrix.vbt.heatmap(xaxis_title = "entry", yaxis_title = "exit").show()
-
-    elif flag == None:
-        #fixed points
-    
-        #Long
-        portfolio_long = vbt.Portfolio.from_signals(close_price, long_entries, tp_stop=1.0/100, open=open_price, #0.9 1
-                                               high=high_price, low=low_price, #short_entries=short_entries,
-                                               sl_stop=0.7/100)#, 1.3 fees=0.075/100)  
-        pfl_stats = portfolio_long.stats()
-        print(pfl_stats)
-        portfolio_long.plot().show()
-
-        #Short
-        """portfolio_short = vbt.Portfolio.from_signals(close_price, tp_stop=0.4/100, open=open_price, #0.4
-                                               high=high_price, low=low_price, short_entries=short_entries,
-                                               sl_stop=0.8/100)#, 0.8 fees=0.075/100)
-        
-
-        pfs_stats = portfolio_short.stats()
-        print(pfs_stats)"""
-        #portfolio_short.plot().show()
-        #print(portfolio_short.total_return())
-
-
-        #print(portfolio.orders.records_readable)
-
+    # Adding to List
+    return ({"TP": tp, "SL": sl, "Returns": total_returns, "win rate": win_rate, "total trades": total_trades})
     
 
 
-#print(get_signals("BTCUSDT", "5m", 6, 20, 50, 100, 10, "total_return"))
+def strategy(trading_pair, chart_interval, short_rsi_window, short_ema1_window, short_ema2_window, 
+                short_ema3_window, long_rsi_window, long_ema1_window, long_ema2_window, 
+                long_ema3_window, hm_spaceing, metric, flag ="optimise: TP/SL"):
+    tp_stop =  np.linspace(0,1,11)
+    sl_stop =  np.linspace(0,1,11)
 
-#bt_strategy2(trading_pair, chart_interval, rsi_window, ema1_window, ema2_window, ema3_window, hm_spaceing, metric, flag=None)
+    # Testing
+    profit_return = []
+    for i in range(len(tp_stop)): # TP
+        for n in range(len(sl_stop)): # SL
+            if tp_stop[i] == 0 or sl_stop[n] == 0: # excluding 0 from list
+                pass
+            else:
+                # Declaring variables
+                tp = round(tp_stop[i],2)
+                sl = round(sl_stop[n],2)
+                test = it_bt(trading_pair, chart_interval, short_rsi_window, short_ema1_window, short_ema2_window, 
+                            short_ema3_window, long_rsi_window, long_ema1_window, long_ema2_window, 
+                            long_ema3_window, hm_spaceing, metric, sl, tp)
+                print(test)
 
 """PARAMETERS"""
 #SHORT
@@ -298,10 +288,11 @@ long_e1_window = 20 #EMA 1 window Long: 20
 long_e2_window = 50 #EMA 2 window Long: 50
 long_e3_window = 100 #EMA 3 window Long: 100
 
-bt_strategy2("BTCUSDT", "5m", short_rsi_window, short_e1_window, short_e2_window, short_e3_window,
-             long_rsi_window, long_e1_window, long_e2_window, long_e3_window, 
-             10, "total_return") #, "optimise")
-#rand("BTCUSDT", "5m", 7, 10, "max_drawdown")
+#STANDARD PARAMS
+trading_pair = "BTCUSDT"
+chart_interval = "5m"
 
 
-#(data_gathering("BTCUSDT","5m", 30, 1000))
+strategy(trading_pair, chart_interval, short_rsi_window, short_e1_window, short_e2_window, short_e3_window,
+                        long_rsi_window, long_e1_window, long_e2_window, long_e3_window, 
+                        10, "total_return")
