@@ -69,6 +69,9 @@ class Monitor:
         connection.close() #Closing the database
 
         return orderbook_pos, order_status, order_side, order_equity, open_funds_traded, take_profit, stop_loss, stop_limit
+    
+
+
 
     # Based on the status of the Order, actions will be submitted to take place
     def order_action(self):
