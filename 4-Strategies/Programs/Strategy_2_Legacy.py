@@ -140,7 +140,7 @@ def wf_cofirmation(trading_pair, exchange_name, chart_interval, indicator_interv
 
 """ [3] DETERMINES IF ALL THE CONDITIONS FOR TRIGGERING A LONG/ SHORT SIGNAL HAVE BEEN MET """
 def strategy(trading_pair, exchange_name, chart_interval, emaL1_interval, emaL2_interval, emaL3_interval,
-             emaS1_interval, emaS2_interval, emaS3_interval, rsi_interval, record_signal=True):
+             emaS1_interval, emaS2_interval, emaS3_interval, rsi_interval, record_signal=False):
     try:
         """ [1] GATHERING SIGNALS - W"""
         # WF signal 
