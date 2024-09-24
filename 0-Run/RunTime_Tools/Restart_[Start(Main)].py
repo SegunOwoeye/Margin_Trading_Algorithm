@@ -211,5 +211,5 @@ main.update_timer()"""
 
 
 """ RUN PROGRAM"""
-restart_time = 6 # -> Restarts Every 6 Days
+restart_time = 5 # -> Restarts Every 5 Days
 run(restart_time)
