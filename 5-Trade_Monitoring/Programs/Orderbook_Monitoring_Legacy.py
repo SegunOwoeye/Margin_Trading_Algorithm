@@ -6,6 +6,7 @@ from sys import path
 import time
 
 class Monitor:
+    # [1] Initialises Variables
     def __init__(self, trading_pair, exchange_name, flag, chart_interval, db_name):
         self.trading_pair = trading_pair
         self.exchange_name = exchange_name
@@ -14,7 +15,7 @@ class Monitor:
         self.chart_interval = chart_interval
 
 
-
+    # [2] Gets the order status and other orderbook information
     def get_status(self):
         """
         None -> Orderbook is empty
@@ -55,6 +56,9 @@ class Monitor:
         take_profit = []
         stop_loss = []
         stop_limit = []
+        TP_OrderID = []
+        SL_OrderID = []
+        entry_price = []
         for i in range(len(list_check)):
             orderbook_pos.append(i)
             order_status.append(list_check[i][23])
@@ -64,32 +68,37 @@ class Monitor:
             take_profit.append(list_check[i][9])
             stop_loss.append(list_check[i][10])
             stop_limit.append(list_check[i][11])
+            TP_OrderID.append(list_check[i][24])
+            SL_OrderID.append(list_check[i][25])
+            entry_price.append(list_check[i][14])
 
         connection.commit()
         connection.close() #Closing the database
 
-        return orderbook_pos, order_status, order_side, order_equity, open_funds_traded, take_profit, stop_loss, stop_limit
+        return orderbook_pos, order_status, order_side, order_equity, open_funds_traded, take_profit, stop_loss, stop_limit, TP_OrderID, SL_OrderID, entry_price
     
 
 
 
-    # Based on the status of the Order, actions will be submitted to take place
+    # [3] Based on the status of the Order, actions will be submitted to take place
     def order_action(self):
         """
         None -> Orderbook is empty
         Ready -> A signal has been given and a new order has been submitted to the book
-        Entered -> Depending on the Side (Long/Short) a position has been entered and is now being monitored 9Active
-        OCO_Placed -> Bot has entered the market and TP/SL orders have been sent to exchange
+        Entered -> Depending on the Side (Long/Short) a position has been entered and is now being monitored Active
+        Initial_OCO_Placed -> Bot has entered the market and TP/SL orders have been sent to exchange
+        Final_OCO_Placed -> Initial OCO has been canceled for a higher SL to guarantee profits
         Closed -> The position has been closed 
         """
         
+        # [3.1] Importing orderbook_status_info
         orderbook_status_info = self.get_status()
 
-        
+        # [3.1.1] Checking to see if the orderbook is empty
         if orderbook_status_info == None: # Do nothing as there are no orders
             return 
         
-        # Getting orderbook data
+        # [3.1.2] Getting orderbook data
         orderbook_pos = orderbook_status_info[0]
         order_status = orderbook_status_info[1]
         order_side = orderbook_status_info[2]
@@ -98,27 +107,41 @@ class Monitor:
         take_profit = orderbook_status_info[5]
         stop_loss = orderbook_status_info[6]
         stop_limit = orderbook_status_info[7]
+        TP_OrderID = orderbook_status_info[8]
+        SL_OrderID = orderbook_status_info[9]
+        entry_price = orderbook_status_info[10]
         #print(order_equity)
+        
 
+        # [3.2] Submitting Actions to Database depending on Orderbook Status
         for i in range(len(orderbook_pos)):
             # Changing Path
             path.append("7-Placing_Orders/Programs") 
-            # function for placing the market order and updating the orderbook using the current position number
+
+            # [3.2.1] Function for placing the market order and updating the orderbook using the current position number
             if order_status[i] == "Ready": # WORKING
                 from Margin_Orders import order
                 main = order(self.trading_pair, self.exchange_name, self.flag, order_side[i], order_equity[i], self.chart_interval, self.db_name)
                 main.Ready_update_orderbook(i)
 
-            # function for placing the OCO order and updating the orderbook using the position number
+            # [3.2.2] Function for placing the OCO order and updating the orderbook using the position number
             elif order_status[i] == "Entered": # WORKING
                 from OCO_Orders import order
                 main = order(self.trading_pair, self.exchange_name, self.flag, order_side[i], open_funds_traded[i], self.chart_interval, self.db_name, 
                              take_profit[i], stop_loss[i], stop_limit[i])
                 main.Entered_update_orderbook(i)
-                
+            
+            # [3.2.3] Function for checking to see if OG OCo can be canceled and a new one added to gaurantee profits and updating the orderbook using the position number
+            elif order_status[i] == "Initial_OCO_Placed":
+                from Cancel_OCO_Order import order
+                main = order(trading_pair=self.trading_pair, exchange_name=self.exchange_name, flag=self.flag, chart_interval=self.chart_interval, 
+                             db_name=self.db_name, OrderID=[TP_OrderID[i], SL_OrderID[i]], TP=take_profit[i], Stop_Loss=stop_loss[i], Stop_Limit=stop_limit[i], 
+                             side=order_side[i], asset_equity=order_equity[i], entry_price=entry_price[i])
+                main.ReEntered_update_orderbook(i)
 
-            # Do nothing and wait for OCO order on exchange to do something
-            elif order_status[i] == "OCO_Placed": # WORKING
+
+            # [3.2.4] Do nothing and wait for OCO order on exchange to do something
+            elif order_status[i] == "Final_OCO_Placed": # WORKING
                 # Changing Path
                 path.append("5-Trade_Monitoring/Programs") 
                 # Create a function to monitor if live on the exchange the OCO order has been executed or not
