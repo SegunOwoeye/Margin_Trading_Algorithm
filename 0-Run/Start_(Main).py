@@ -350,8 +350,8 @@ gathering_programs_list = trade_sys_start_programs + \
                           processed_data_program + \
                           trade_monitoring_programs + \
                           strategy_programs + \
-                          orderbook_monitoring_programs + \
-                          risk_managment_programs 
+                          orderbook_monitoring_programs #+ \
+                          #risk_managment_programs 
 
 
 
