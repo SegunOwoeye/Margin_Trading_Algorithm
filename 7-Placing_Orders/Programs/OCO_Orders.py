@@ -138,7 +138,7 @@ class order:
         # Setting Up Variables to be added/ Ammended to orderbook
         SL_OrderID = order_data[0]
         TP_OrderID = order_data[1] 
-        status = "OCO_Placed"
+        status = "Initial_OCO_Placed"
 
         # Getting file name
         date_and_time = (datetime.now())
