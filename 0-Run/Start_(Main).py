@@ -215,7 +215,7 @@ def demo_account_Balance_list(): # Creates Demo account balances for relevant pa
     """for p in range(len(asset_list)): 
         program_name = F"3-AccountBalance/Programs/{asset_list[p]}/Paper_Trading_Account_Create_{asset_list[p]}.py"
         run_demo_balance_programs.append(program_name)"""
-    program_name = F"3-AccountBalance/Programs/USDT/Paper_Trading_Account_Create_USDT.py"
+    program_name = f"3-AccountBalance/Programs/USDT/Paper_Trading_Account_Create_USDT.py"
     run_demo_balance_programs.append(program_name)
     return run_demo_balance_programs            
 
@@ -223,17 +223,17 @@ def live_account_Balance_list(): # Gets live account balances for relevant pairs
     # Running Live balance programs 
     run_live_balance_programs = []
     for p in range(len(asset_list)):
-        program_name = F"3-AccountBalance/Programs/{asset_list[p]}/Live_Account_Balance_Legacy_{asset_list[p]}.py"
+        program_name = f"3-AccountBalance/Programs/{asset_list[p]}/Live_Account_Balance_Legacy_{asset_list[p]}.py"
         run_live_balance_programs.append(program_name) 
     return run_live_balance_programs 
 
-
-if flag == 1: # Demo
+# [4.1] Demo Account Balances
+if flag == 1: 
     account_balance_program = demo_account_Balance_list()
-elif flag == 0: # Live
+# [4.2] Live Account Balances
+elif flag == 0: 
     account_balance_program = live_account_Balance_list()
-else:
-    pass
+
 
 ####################################################################################
 #[5] Programs to monitor live trades
@@ -297,10 +297,27 @@ def core_programs_list():
     program_name = ["0-Run/RunTime_Tools/Restart_[Start(Main)].py", "ZZ-General_Functions/Programs/Delete_Files.py"]
     return program_name
 
+####################################################################################
+# [9] Risk Managment
+####################################################################################
+def risk_managment_programs_list():
+    # [9.1] Running Trailing Stop Loss programs
+    run_trailing_stop_loss = []
+    for n in range(len(pair_list)):
+        for p in range(len(time_intervals)):
+            for c in range(len(strat_db_list)):
+                strat_name = strat_db_list[c].replace("_Orders", "") 
+                program_name = f"8-Risk_Managment/Programs/{strat_name}/Trailing_Stop_Loss_{pair_list[n]}{time_intervals[p]}{strat_name}.py"
+                run_trailing_stop_loss.append(program_name)
+    
+    # Program List
+    program_list = run_trailing_stop_loss
 
+    return program_list
+    
 
 ####################################################################################
-#[9] lists of all programs to be run
+# [XX] lists of all programs to be run
 ####################################################################################
 
 # 1. Account Balance Gathering + {Trade system startup}
@@ -324,7 +341,17 @@ strategy_programs = strategy_file_list()
 # 6. Orderbook Monitoring
 orderbook_monitoring_programs = orderbook_monitoring_file_lists()
 
-gathering_programs_list = trade_sys_start_programs + account_balance_programs + raw_data_lists + processed_data_program + trade_monitoring_programs + strategy_programs + orderbook_monitoring_programs
+# 7. Risk Managment
+risk_managment_programs = risk_managment_programs_list()
+
+gathering_programs_list = trade_sys_start_programs + \
+                          account_balance_programs + \
+                          raw_data_lists + \
+                          processed_data_program + \
+                          trade_monitoring_programs + \
+                          strategy_programs + \
+                          orderbook_monitoring_programs + \
+                          risk_managment_programs 
 
 
 
