@@ -3,7 +3,7 @@
         "name": "The Sunday Protocol",
         "version": "1.0.1",
         "exchange": "Binance",
-        "description": "A marin trading application for automomatically opening and closing margin positions"
+        "description": "A margin trading application for automomatically opening and closing margin positions"
 
     },
     "api_info":{
