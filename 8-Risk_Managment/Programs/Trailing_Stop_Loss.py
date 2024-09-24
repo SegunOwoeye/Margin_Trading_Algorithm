@@ -152,13 +152,13 @@ class Monitor:
 
         # [4.3] Running Calculations
         for i in range(len(order_status)):
-            # Trailing Percentage
+            """# Trailing Percentage
             trailing_percentage = round((take_profit[i]-entry_price[i])/entry_price[i] * 2, 4)
             # [4.3.0] Getting Profit Percentage
             profit_percentage = (current_price - entry_price[i])/entry_price[i] * 100
             profit_percentage = round(profit_percentage,3)/100
             if order_side[i] == "SHORT":
-                profit_percentage = -profit_percentage
+                profit_percentage = -profit_percentage"""
 
             # [4.3.1] Trailing Stop Loss Logic
             if profit_percentage > 0:
