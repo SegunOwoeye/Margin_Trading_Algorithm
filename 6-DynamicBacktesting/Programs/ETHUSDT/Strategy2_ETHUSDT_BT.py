@@ -307,7 +307,7 @@ def bt_strategy2(trading_pair, chart_interval, short_rsi_window, short_ema1_wind
         #terminal_sys("cls")
         print(f"Optimisation results for TP/SL: SHORT")
         for item in short_profit_return:
-            if item['Returns'] < average_short_returns or item['TP']< item['SL']:# or (item['Returns'] < short_benchmark):
+            if item['Returns'] < average_short_returns or item['TP']< item['SL'] or item['win rate']<40 or (item['Returns'] < short_benchmark):
                 pass
             else:
 
@@ -359,7 +359,7 @@ def bt_strategy2(trading_pair, chart_interval, short_rsi_window, short_ema1_wind
         average_long_returns = sum(long_return_values)/len(long_return_values)
         print(f"Optimisation results for TP/SL: LONG")
         for item in long_profit_return:
-            if (item['Returns'] < average_long_returns) or (item['TP']< item['SL']):# or (item['Returns'] < long_benchmark):
+            if (item['Returns'] < average_long_returns) or (item['TP']< item['SL']) or item['win rate']<40 or (item['Returns'] < long_benchmark):
                 pass
             else:
 
