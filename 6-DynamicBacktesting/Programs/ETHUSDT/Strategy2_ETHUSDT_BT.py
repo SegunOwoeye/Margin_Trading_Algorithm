@@ -6,6 +6,10 @@ import numpy as np
 from sys import path
 from os.path import exists
 import time
+from os import system as terminal_sys
+#from vectorbt import Portfolio
+import importlib
+from tqdm import tqdm
 
 
 # Custom indicators
@@ -26,7 +30,7 @@ def price_data(trading_pair, chart_interval, name="close"):
 
     return price_data
 
-
+# BT
 def num_intervals(chart_interval, bt_days, limit):
     #Turns value into a integer in minutes
     str_interval = chart_interval.lower()
@@ -43,7 +47,7 @@ def num_intervals(chart_interval, bt_days, limit):
     iterations = -(-(num_intervals / limit) // 1)
 
     return num_intervals, int_interval
-
+# BT
 def date_gathering(chart_interval, bt_days, limit):
     data = num_intervals(chart_interval, bt_days, limit)
     num_interval, interval = data
@@ -79,7 +83,7 @@ def date_gathering(chart_interval, bt_days, limit):
             pass
 
     return (start_time, end_time)
-        
+# BT    
 def data_gathering(trading_pair, chart_interval, bt_days, limit):
     start_time, end_time = date_gathering(chart_interval, bt_days, limit)
     #Checks to see if the file already exists
@@ -198,7 +202,7 @@ def get_signals(trading_pair, chart_interval, rsi_window, ema1_window, ema2_wind
 # Custom
 def bt_strategy2(trading_pair, chart_interval, short_rsi_window, short_ema1_window, short_ema2_window, 
                 short_ema3_window, long_rsi_window, long_ema1_window, long_ema2_window, 
-                long_ema3_window, hm_spaceing, metric, flag=None):
+                long_ema3_window, hm_spaceing, metric, flag ="optimise: TP/SL"):#flag=None):
     #Gathering signals
     #Short
     short_signals = get_signals(trading_pair, chart_interval, short_rsi_window, short_ema1_window, short_ema2_window, 
@@ -236,12 +240,12 @@ def bt_strategy2(trading_pair, chart_interval, short_rsi_window, short_ema1_wind
     low_price = price_data(trading_pair, chart_interval, name="low")
 
     
-    #Cominations
-    if flag == "optimise":
+    #Combinations
+    if flag == "optimise: rsi":
         entry_points = np.linspace(20,30, num=hm_spaceing)
         exit_points = np.linspace(75,85, num=hm_spaceing)
 
-        grid = np.array(np.meshgrid(entry_points, exit_points)).T.reshape(-1,2)
+        """grid = np.array(np.meshgrid(entry_points, exit_points)).T.reshape(-1,2)
         
         #Variable Points
         entries = rsi.rsi_crossed_below(list(grid[:,[0]]))
@@ -252,29 +256,152 @@ def bt_strategy2(trading_pair, chart_interval, short_rsi_window, short_ema1_wind
         pf_perf = portfolio.deep_getattr(metric)
         pf_perf_matrix = pf_perf.vbt.unstack_to_df(index_levels = "rsi_crossed_above",
                                                 column_levels = "rsi_crossed_below") #, symmetric = True)
-        pf_perf_matrix.vbt.heatmap(xaxis_title = "entry", yaxis_title = "exit").show()
+        pf_perf_matrix.vbt.heatmap(xaxis_title = "entry", yaxis_title = "exit").show()"""
+    elif flag == "optimise: TP/SL": 
+
+        tp_stop =  np.linspace(2,0,21)
+        sl_stop =  np.linspace(2,0,21)
+
+        # SHORT
+        short_profit_return = []
+        counter = len(tp_stop) * len(sl_stop)
+        short_benchmark = 0
+        for i in tqdm(range(len(tp_stop))): # TP
+            for n in range(len(sl_stop)): # SL
+                if tp_stop[i] == 0 or sl_stop[n] == 0: # excluding 0 from list
+                    counter = counter - 1
+                    pass
+                else:
+                    # Declaring variables
+                    tp = round(tp_stop[i],2)
+                    sl = round(sl_stop[n],2)
+        
+                
+                    #Short -> TP=-% | SL=+%
+                    portfolio_short = vbt.Portfolio.from_signals(close_price, tp_stop=tp/100, open=open_price, #0.4
+                                                        high=high_price, low=low_price, short_entries=short_entries,
+                                                        sl_stop=sl/100)#, freq="5T")#, 0.8 fees=0.075/100)
+                    #terminal_sys("cls")
+                    
+
+                    pfs_stats = portfolio_short.stats()
+                    #print(pfs_stats)
+
+                    total_returns = pfs_stats['Total Return [%]']
+                    win_rate = pfs_stats['Win Rate [%]']
+                    total_trades = pfs_stats['Total Closed Trades']
+
+                    # Adding to List
+                    short_profit_return.append({"TP": tp, "SL": sl, "Returns": total_returns, "win rate": win_rate, "total trades": total_trades})
+                    #print({"TP": tp, "SL": sl, "Returns": total_returns, "win rate": win_rate, "total trades": total_trades})
+                    
+                    short_benchmark = pfs_stats['Benchmark Return [%]']
+                    
+                    #print(f'Number of iterations left: {counter}')
+                    #terminal_sys("cls")
+        
+        
+        # Nicley formatted printed list
+        short_return_values = [row['Returns'] for row in short_profit_return if row['Returns'] > 0]
+        average_short_returns = sum(short_return_values)/len(short_return_values)
+        #terminal_sys("cls")
+        print(f"Optimisation results for TP/SL: SHORT")
+        for item in short_profit_return:
+            if item['Returns'] < average_short_returns or item['TP']< item['SL']:# or (item['Returns'] < short_benchmark):
+                pass
+            else:
+
+                print(item)
+        
+
+        # Long
+        long_profit_return = []
+        long_benchmark = 0
+        counter = len(tp_stop) * len(sl_stop)
+        for i in tqdm(range(len(tp_stop))): # TP
+            for n in range(len(sl_stop)): # SL
+                if tp_stop[i] == 0 or sl_stop[n] == 0: # excluding 0 from list
+                    counter = counter - 1
+                    pass
+                else:
+                    # Declaring variables
+                    tp = round(tp_stop[i],2)
+                    sl = round(sl_stop[n],2)
+        
+                
+                    #Short -> TP=-% | SL=+%
+                    portfolio_long = vbt.Portfolio.from_signals(close_price, long_entries, tp_stop=tp/100, open=open_price, #0.4
+                                                        high=high_price, low=low_price,
+                                                        sl_stop=sl/100)#, freq="5T")#, 0.8 fees=0.075/100)
+                    #terminal_sys("cls")
+                    
+
+                    pfs_stats = portfolio_long.stats()
+                    #print(pfs_stats)
+
+                    total_returns = pfs_stats['Total Return [%]']
+                    win_rate = pfs_stats['Win Rate [%]']
+                    total_trades = pfs_stats['Total Closed Trades']
+
+                    # Adding to List
+                    long_profit_return.append({"TP": tp, "SL": sl, "Returns": total_returns, "win rate": win_rate, "total trades": total_trades})
+                    #print({"TP": tp, "SL": sl, "Returns": total_returns, "win rate": win_rate, "total trades": total_trades})
+
+                    counter = counter - 1
+                    long_benchmark = pfs_stats['Benchmark Return [%]']
+                    #print(f'Number of iterations left: {counter}')
+                    #terminal_sys("cls")
+
+        
+        # Nicley formatted printed list
+        #terminal_sys("cls")
+        long_return_values = [row['Returns'] for row in long_profit_return if row['Returns'] > 0]
+        average_long_returns = sum(long_return_values)/len(long_return_values)
+        print(f"Optimisation results for TP/SL: LONG")
+        for item in long_profit_return:
+            if (item['Returns'] < average_long_returns) or (item['TP']< item['SL']):# or (item['Returns'] < long_benchmark):
+                pass
+            else:
+
+                print(item)
+        
+        # Getting STD of Close Prices
+        c_prices = []
+        for key, value in close_price.items():
+            c_prices.append(value)
+
+        c_returns = np.diff(c_prices) / c_prices[:-1]
+
+        std_dev = np.std(c_returns)
+        print(f"Std: {std_dev}")
 
     elif flag == None:
         #fixed points
     
         #Long
-        portfolio_long = vbt.Portfolio.from_signals(close_price, long_entries, tp_stop=1.5/100, open=open_price, #0.9 1
+        """portfolio_long = vbt.Portfolio.from_signals(close_price, long_entries, tp_stop=0.8/100, open=open_price, #0.9 1
                                                high=high_price, low=low_price, #short_entries=short_entries,
-                                               sl_stop=0.6/100)#, 1.3 fees=0.075/100)  
+                                               sl_stop=0.7/100)#, 1.3 fees=0.075/100)  
         pfl_stats = portfolio_long.stats()
         print(pfl_stats)
-        #portfolio_long.plot().show()
+        portfolio_long.plot().show()"""
 
         #Short
-        """portfolio_short = vbt.Portfolio.from_signals(close_price, tp_stop=0.5/100, open=open_price, #0.5
+        portfolio_short = vbt.Portfolio.from_signals(close_price, tp_stop=0.8/100, open=open_price, #0.4
                                                high=high_price, low=low_price, short_entries=short_entries,
-                                               sl_stop=0.8/100)#, 0.8 fees=0.075/100)
+                                               sl_stop=0.4/100)#, 0.8 fees=0.075/100)
         
 
         pfs_stats = portfolio_short.stats()
         print(pfs_stats)
+
+        total_returns = pfs_stats['Total Return [%]']
+        win_rate = pfs_stats['Win Rate [%]']
+        total_trades = pfs_stats['Total Closed Trades']
+
+        print(total_returns, win_rate, total_trades)
         portfolio_short.plot().show()
-        # print(portfolio_short.total_return())"""
+        #print(portfolio_short.total_return())
 
 
         #print(portfolio.orders.records_readable)
@@ -288,10 +415,10 @@ def bt_strategy2(trading_pair, chart_interval, short_rsi_window, short_ema1_wind
 
 """PARAMETERS"""
 #SHORT
-short_rsi_window = 12 #RSI window Short 12
-short_e1_window = 10 #EMA 1 window short: 10 
-short_e2_window = 35 #EMA 2 window short: 35
-short_e3_window = 70 #EMA 3 window short: 70 
+short_rsi_window = 12 #RSI window Short 14 
+short_e1_window = 10 #EMA 1 window short: 15 
+short_e2_window = 35 #EMA 2 window short: 45
+short_e3_window = 70 #EMA 3 window short: 90 
 
 #LONG
 long_rsi_window = 6 #RSI window Long: 6
@@ -313,7 +440,8 @@ def run(trading_pair, chart_interval):
                         10, "total_return") #, "optimise")
             break
         else: # Creates datafile
-            data_gathering(trading_pair, chart_interval, 30, 1000)
+            # data_gathering(trading_pair, chart_interval, 90, 100) # -> 1h+
+            data_gathering(trading_pair, chart_interval, 30, 1000) # -> 1m+
 
 
 # START PROGRAM
