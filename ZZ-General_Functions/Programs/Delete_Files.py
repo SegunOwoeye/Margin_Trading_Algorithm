@@ -49,7 +49,7 @@ def run(dir_list: list, extension: list):
 
 
 
-dir_list = ["1-DataGathering/", "2-DataProcessing/", "00-Run_Log/data_gathered/"]
+dir_list = ["1-DataGathering/", "2-DataProcessing/", "00-Run_Log/data_gathered/", "5-Trade_Monitoring/"]
 extension = [".db", ".txt"]
 # RUN
 run(dir_list, extension)
