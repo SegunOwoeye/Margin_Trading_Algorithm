@@ -119,29 +119,29 @@ class Monitor:
             path.append("7-Placing_Orders/Programs") 
 
             # [3.2.1] Function for placing the market order and updating the orderbook using the current position number
-            if order_status[i] == "Ready": # WORKING
+            if order_status[i] == "Ready": # -> WORKING
                 from Margin_Orders import order
                 main = order(self.trading_pair, self.exchange_name, self.flag, order_side[i], order_equity[i], self.chart_interval, self.db_name)
                 main.Ready_update_orderbook(i)
 
             # [3.2.2] Function for placing the OCO order and updating the orderbook using the position number
-            elif order_status[i] == "Entered": # WORKING
+            elif order_status[i] == "Entered": # -> Working
                 from OCO_Orders import order
                 main = order(self.trading_pair, self.exchange_name, self.flag, order_side[i], open_funds_traded[i], self.chart_interval, self.db_name, 
                              take_profit[i], stop_loss[i], stop_limit[i])
                 main.Entered_update_orderbook(i)
             
             # [3.2.3] Function for checking to see if OG OCo can be canceled and a new one added to gaurantee profits and updating the orderbook using the position number
-            elif order_status[i] == "Initial_OCO_Placed":
-                from Cancel_OCO_Order import order
+            elif order_status[i] == "Initial_OCO_Placed": # -> Working
+                from Cancel_OCO_Orders import order
                 main = order(trading_pair=self.trading_pair, exchange_name=self.exchange_name, flag=self.flag, chart_interval=self.chart_interval, 
                              db_name=self.db_name, OrderID=[TP_OrderID[i], SL_OrderID[i]], TP=take_profit[i], Stop_Loss=stop_loss[i], Stop_Limit=stop_limit[i], 
-                             side=order_side[i], asset_equity=order_equity[i], entry_price=entry_price[i])
+                             side=order_side[i], asset_equity=open_funds_traded[i], entry_price=entry_price[i])
                 main.ReEntered_update_orderbook(i)
 
 
             # [3.2.4] Do nothing and wait for OCO order on exchange to do something
-            elif order_status[i] == "Final_OCO_Placed": # WORKING
+            elif order_status[i] == "Final_OCO_Placed" or order_status[i] == "Initial_OCO_Placed": # WORKING
                 # Changing Path
                 path.append("5-Trade_Monitoring/Programs") 
                 # Create a function to monitor if live on the exchange the OCO order has been executed or not

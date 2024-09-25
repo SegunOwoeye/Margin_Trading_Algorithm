@@ -126,7 +126,6 @@ class order:
                 r_type = 0 # Private request
 
                 purchase_data = run(method, path, params, r_type)
-
                 return purchase_data
 
 
@@ -187,7 +186,6 @@ class order:
             r_type = 0 # Private request
 
             purchase_data = run(method, path, params, r_type)
-            #print(purchase_data)
             orders = purchase_data['orders']
             SL_OrderID = orders[0]['orderId']
             TP_OrderID = orders[1]['orderId']
@@ -234,7 +232,7 @@ class order:
             
             # [4.2] Places new OCO Order
             order_data = self.new_OCO_Order(new_stop_loss, new_stop_limit)
-
+            
             # [4.3] Setting Up Variables to be added/ Ammended to orderbook
             SL_OrderID = order_data["SL_OrderID"]
             TP_OrderID = order_data["TP_OrderID"] 
