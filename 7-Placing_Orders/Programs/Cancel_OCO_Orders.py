@@ -52,32 +52,35 @@ class order:
         profit_percentage = round(profit_percentage,3)/100
         if self.side == "SHORT":
             profit_percentage = -profit_percentage
+            trailing_percentage = -trailing_percentage
 
         # [1.2.2] Evaluate if the The current trade Has reached halfway
         if profit_percentage > trailing_percentage:
             return {"Status": True, "trailing_percentage": trailing_percentage, "profit_percentage": profit_percentage, "current_price": current_price}
 
         else:
-            return {"Status": False}
+            return {"Status": False, "trailing_percentage": trailing_percentage, "profit_percentage": profit_percentage, "current_price": current_price}
     
     # [1.3] Calculates New Stop Loss and Stop Limit
     def calc_SLs(self):
         # [1.3.1] Initialising and Importing variables
         percentage_information = self.percentage_check()
+        print(percentage_information)
         p_check_Status = percentage_information['Status']
-        trailing_percentage = percentage_information['trailing_percentage']
-        # profit_percentage = percentage_information['profit_percentage']
-        current_price = percentage_information["current_price"]
         
         # [1.3.2] Checks to see if the percentage change is greater than the trailing percentage
         if p_check_Status: # Checks if true
+            trailing_percentage = percentage_information['trailing_percentage']
+            # profit_percentage = percentage_information['profit_percentage']
+            current_price = percentage_information["current_price"]
+            
             if self.side == "LONG": # LONG
                 # new_stop_loss = entry_price + (current_price - entry_price) * (1 - trailing_percent)
-                new_stop_loss = self.entry_price + (current_price - self.entry_price)*(1-trailing_percentage)
+                new_stop_loss = self.entry_price*(1+trailing_percentage)
                 stop_loss = max(new_stop_loss, self.Stop_Loss)
             else: # SHORT
                 # new_stop_loss = entry_price - (entry_price - current_price) * (1 - trailing_percent)
-                new_stop_loss = self.entry_price - (self.entry_price - current_price) * (1-trailing_percentage)
+                new_stop_loss = self.entry_price * (1-trailing_percentage)
                 stop_loss = min(self.Stop_Loss, new_stop_loss)
             
             stop_loss = round(stop_loss, -int(floor(log10(abs(stop_loss)))) + (8 - 2))
@@ -227,8 +230,12 @@ class order:
             new_stop_loss = is_required_new_SL["stop_loss"]
             new_stop_limit = is_required_new_SL["stop_limit"]
 
+            print(is_required_new_SL)
             # [4.1] Cancels the existing OCOs
-            self.Cancel_OCO_order()
+            try:
+                self.Cancel_OCO_order()
+            except:
+                pass
             
             # [4.2] Places new OCO Order
             order_data = self.new_OCO_Order(new_stop_loss, new_stop_limit)
