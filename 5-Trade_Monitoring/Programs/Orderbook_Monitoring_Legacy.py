@@ -139,9 +139,11 @@ class Monitor:
                              side=order_side[i], asset_equity=open_funds_traded[i], entry_price=entry_price[i])
                 main.ReEntered_update_orderbook(i)
 
+            else:
+                pass
 
             # [3.2.4] Do nothing and wait for OCO order on exchange to do something
-            elif order_status[i] == "Final_OCO_Placed" or order_status[i] == "Initial_OCO_Placed": # WORKING
+            if order_status[i] == "Final_OCO_Placed" or order_status[i] == "Initial_OCO_Placed": # WORKING
                 # Changing Path
                 path.append("5-Trade_Monitoring/Programs") 
                 # Create a function to monitor if live on the exchange the OCO order has been executed or not
@@ -153,6 +155,9 @@ class Monitor:
             
             # Do Nothing if the order has been closed
             elif order_status[i] == "Closed": # Do Nothing
+                pass
+
+            else:
                 pass
         
         
