@@ -94,25 +94,34 @@ def Willian_Fractal(trading_pair, exchange_name, chart_interval, indicator_inter
 
     
     """ [2] Calculating WF """
+
+    # [2.1] Ensure lists have equal lengths
+    assert len(high_list) == len(low_list), "high_list and low_list lists must have the same length."
+
+    n = len(high_list)
     fractal_data = []
-    for i in range(len(high_list)):
-        if i < window or i > len(high_list) - window:
+    # [2.2] Calculation
+    for i in range(window, n - window):
+        # Check for Up Fractal -> Bearish fractal = -1
+        if high_list[i] == max(high_list[i-window:i+window+1]) and \
+           high_list[i] > high_list[i-1] and high_list[i] > high_list[i-2]:
+            fractal_data.append(-1)
+
+        # Check for Down Fractal -> Bullish fractal = 1
+        if low_list[i] == min(low_list[i-window:i+window+1]) and \
+           low_list[i] < low_list[i-1] and low_list[i] < low_list[i-2]:
+            fractal_data.append(1)
+
+        if len(fractal_data) == 0: # No fractal = 0
             fractal_data.append(0)
+        
+        if len(fractal_data) == 2: # Up and down fractal at same time
+            return [0]
 
-        else:
-            #Bearish fractal = -1
-            if all(high_list[i] > high_list[i+j] for j in range(-window, window) if j != 0):
-                fractal_data.append(-1)
-            
-            #Bullish fractal = 1
-            elif all(low_list[i] < low_list[i+j] for j in range(-window, window) if j != 0):
-                fractal_data.append(1)
 
-            else: #No fractal = 0
-                fractal_data.append(0)
+    current_fractal = fractal_data[0]
 
-    fractal_data = [0] * window + fractal_data[:-window]
-    current_fractal = fractal_data[-1]
+    
     
     # 3 Returing the value of the function
     if current_fractal == 0:
