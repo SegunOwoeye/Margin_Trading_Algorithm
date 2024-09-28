@@ -335,7 +335,7 @@ def printTodatabase(trading_pair, exchange_name, chart_interval, emaL1_interval,
                 elif float(balances) < float(low_USDT_balance):
                     sleep(5)
                 
-                # If the most recent entry isn't closed, do nothing
+                # If the most recent entry isn't closed, do nothing -> MIGHT TAKE OUT
                 elif list_check[-1][23] != "Closed":
                     sleep(5)
 
