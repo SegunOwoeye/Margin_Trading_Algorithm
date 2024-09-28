@@ -92,6 +92,7 @@ class order:
             r_type = 0 # Private request
 
             purchase_data = run(method, path, params, r_type)
+            #print(purchase_data)
 
             return purchase_data
 

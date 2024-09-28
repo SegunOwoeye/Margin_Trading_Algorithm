@@ -62,15 +62,15 @@ class order:
             return {"Status": False, "trailing_percentage": trailing_percentage, "profit_percentage": profit_percentage, "current_price": current_price}
     
     # [1.3] Calculates New Stop Loss and Stop Limit
-    def calc_SLs(self):
+    def calc_SLs(self,p_adjustment=0.001):
         # [1.3.1] Initialising and Importing variables
         percentage_information = self.percentage_check()
-        print(percentage_information)
+        #print(percentage_information)
         p_check_Status = percentage_information['Status']
         
         # [1.3.2] Checks to see if the percentage change is greater than the trailing percentage
         if p_check_Status: # Checks if true
-            trailing_percentage = percentage_information['trailing_percentage']
+            trailing_percentage = percentage_information['trailing_percentage']-p_adjustment
             # profit_percentage = percentage_information['profit_percentage']
             current_price = percentage_information["current_price"]
             
@@ -160,13 +160,15 @@ class order:
         elif self.side == "SHORT":
             side = "BUY"
 
+        # [3.1] Adjusting TP dp
+        take_profit = round(self.TP, -int(floor(log10(abs(self.TP)))) + (8 - 2))
         # [3.2] Setting Parameters
         params = {
             "symbol": self.trading_pair,
             "isIsolated": "FALSE",
             "side": side,
             "quantity": self.asset_equity,
-            "price": self.TP,
+            "price": take_profit,
             "stopPrice": new_Stop_Loss,
             "stopLimitPrice": new_Stop_Limit,
             "sideEffectType": "MARGIN_BUY",
@@ -189,6 +191,7 @@ class order:
             r_type = 0 # Private request
 
             purchase_data = run(method, path, params, r_type)
+            #print(purchase_data)
             orders = purchase_data['orders']
             SL_OrderID = orders[0]['orderId']
             TP_OrderID = orders[1]['orderId']
@@ -230,7 +233,7 @@ class order:
             new_stop_loss = is_required_new_SL["stop_loss"]
             new_stop_limit = is_required_new_SL["stop_limit"]
 
-            print(is_required_new_SL)
+            #print(is_required_new_SL)
             # [4.1] Cancels the existing OCOs
             try:
                 self.Cancel_OCO_order()
