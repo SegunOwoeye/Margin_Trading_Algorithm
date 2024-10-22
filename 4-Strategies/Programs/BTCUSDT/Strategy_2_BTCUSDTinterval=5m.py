@@ -18,10 +18,10 @@ emaS2_interval = 45
 emaS3_interval = 90
 rsi_interval = 6
 leverage = 3 
-L_TP = 0.8
-S_TP = 0.6
-L_SL = 0.6
-S_SL = 0.5
+L_TP = 1.6
+S_TP = 0.9
+L_SL = 0.7
+S_SL = 0.6
 flag = config()["application_settings"]['trading_environment']['flag']
 tradeable_fund_Percentage = 50
 
