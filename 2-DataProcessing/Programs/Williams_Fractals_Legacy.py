@@ -75,10 +75,10 @@ def Willian_Fractal(trading_pair, exchange_name, chart_interval, indicator_inter
     # [1.0] Importing variables from previous functions
     window = indicator_interval 
     historical_data = get_historical_data(trading_pair, exchange_name, chart_interval, indicator_interval)
-    current_data = get_current_data(trading_pair, exchange_name, chart_interval)
+    #current_data = get_current_data(trading_pair, exchange_name, chart_interval)
 
     # [1.1] Initialising Variables
-    data_set = historical_data + current_data
+    data_set = historical_data #+ current_data
     lookback_window = window * 2 + 1
     lookback_dataset = data_set[-lookback_window:]
 
