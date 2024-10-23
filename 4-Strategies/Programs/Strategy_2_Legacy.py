@@ -245,9 +245,9 @@ def printTodatabase(trading_pair, exchange_name, chart_interval, emaL1_interval,
             
                 """ SETUP ORDERBOOK """
                 # Side
-                if signal == 1:
+                if signal == -1: #== 1:
                     side = "LONG"
-                elif signal == -1:
+                elif signal == 1: #== -1:
                     side = "SHORT"
                 
 
