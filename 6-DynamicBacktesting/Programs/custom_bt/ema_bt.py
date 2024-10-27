@@ -14,7 +14,7 @@ def price_data(trading_pair, chart_interval, name="close"):
 """[1] Define the indicator, EMA function"""
 def ema(close_data, window=20):
 
-    #Puts high and low price data into lists
+    # Puts Close Data into a list
     close_list = []
     #date_list = []
     for i in range(len(close_data)):
