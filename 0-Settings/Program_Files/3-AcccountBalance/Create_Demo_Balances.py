@@ -54,14 +54,14 @@ run(trading_pair, exchange_name, db_name, balance, strat_db_name, R_Trading_Pair
                     f.write(file_contents)
                     f.close()
 
-                    print(f"{python_file} file created")
+                    #print(f"{python_file} file created")
 
 
 
 
 
 
-
+"""
 #Variables
 trading_pair = ["BTCUSDT", "ETHUSDT", "ARBUSDT"]
 #trading_pair = ["BTCUSDT"]
@@ -72,5 +72,5 @@ db_name = "Demo_Balance"
 
 #Run program
 #stat_indicators(trading_pair, Exchange, Time_Interval, SA_Interval, file_name)
-demo_balances(trading_pair, Exchange, db_name)
+demo_balances(trading_pair, Exchange, db_name)"""
 
