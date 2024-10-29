@@ -247,7 +247,7 @@ def get_signals(trading_pair, chart_interval, std_threshold=2):
 
 
 """ [4] Backtesting Strategy 7"""
-def bt_strategy7(trading_pair, chart_interval, flag= "optimise: TP/SL"):
+def bt_strategy7(trading_pair, chart_interval, flag= None):#"optimise: TP/SL"):
     # [4.1] Load Data
     data = get_signals(trading_pair=trading_pair, chart_interval=chart_interval)
     signals = data[0]
@@ -268,7 +268,10 @@ def bt_strategy7(trading_pair, chart_interval, flag= "optimise: TP/SL"):
     ETH_open_price = price_data(trading_pair[1], chart_interval, name="open")
     ETH_high_price = price_data(trading_pair[1], chart_interval, name="high")
     ETH_low_price = price_data(trading_pair[1], chart_interval, name="low")
-    flag=None
+
+
+    #flag=None
+    
     # [4.2] Conducting trade analysis
     # [4.2.1] Optimising TP and SL points
     if flag == "optimise: TP/SL": 
@@ -386,14 +389,14 @@ def bt_strategy7(trading_pair, chart_interval, flag= "optimise: TP/SL"):
     # [4.2.2] Visual Inspection of Trades
     elif flag == None:
         # Short
-        Short_tp = 0.90 #%
-        Short_sl = 1.40 # 2 %
+        Short_tp = 1.9 #%
+        Short_sl = 1.2 # 2 %
 
         # Long 
-        Long_tp = 0.8
-        Long_sl = 1.6 
+        Long_tp = 0.9
+        Long_sl = 0.6 
         # customs
-        trade_type = "Long"
+        trade_type = "Short"
         custom_exit = False
         
         #SHORT
@@ -439,27 +442,28 @@ def bt_strategy7(trading_pair, chart_interval, flag= "optimise: TP/SL"):
 """PARAMETERS"""
 #STANDARD PARAMS
 trading_pair = ["BTCUSDT", "SOLUSDT"]#"ETHUSDT"]
-chart_interval = "5m"
+chart_interval = "1h"
 
 
-def run(trading_pair, chart_interval):
+def run(trading_pair, chart_interval, analyse_data=True):
     # [0.1] Checks to see if all data files exist
     for i in range(len(trading_pair)):
         file_name = f"6-DynamicBacktesting/data_gathered/{trading_pair[i]}/raw_output{chart_interval}.csv"
         if exists(file_name): # If the file Exists | Do Nothing
             pass
         else: # If the file does NOT exist | Create the file
-            #data_gathering(trading_pair[i], chart_interval, 30, 100) # -> 1h+
-            data_gathering(trading_pair[i], chart_interval, 30, 1000) # -> 1m+
+            #data_gathering(trading_pair[i], chart_interval, bt_days=30, limit=100) # -> 1h+
+            data_gathering(trading_pair[i], chart_interval, bt_days=30, limit=1000) # -> 1m+
 
 
     # [0.2] Runs the analysis
-    for i in range(len(trading_pair)):
-        file_name = f"6-DynamicBacktesting/data_gathered/{trading_pair[i]}/raw_output{chart_interval}.csv"
-        while True:
-            bt_strategy7(trading_pair=trading_pair, chart_interval=chart_interval)
-            break
-        break 
+    if analyse_data:
+        for i in range(len(trading_pair)):
+            file_name = f"6-DynamicBacktesting/data_gathered/{trading_pair[i]}/raw_output{chart_interval}.csv"
+            while True:
+                bt_strategy7(trading_pair=trading_pair, chart_interval=chart_interval)
+                break
+            break 
             
                 
             
