@@ -71,20 +71,32 @@ start_3(pair_list)
 start_4(pair_list)
 start_5(pair_list)
 
-#[1.2] Creates python files for data gathering and analysis
+#[1.2] Creates python files for data gathering and analysis -> 1-DataGathering
 ####################################################################################
 from config_files.Data_Gathering_file_C import create_data_gathering
-
-#Create programs for data Gathering
 create_data_gathering(pair_list, config_ti, limit, levels)
 
-#[1.3] Creates pdb file for strats
+
+
+
+
+# [1.4] Creating Python Files for gathering Account Balances -> 3-AccountBalance
+################################################################################
+from config_files.Account_Balance_files import Create_Trade_Balances
+Create_Trade_Balances(trading_pair=pair_list)
+
+
+#[1.5] Creates db file for strats
 sys_path.append("4-Strategies/Programs/")
 from Strategy_2_Legacy import creating_db_file
 strat_db_list = program_settings["application_settings"]["strategies"]
 for i in range(len(strat_db_list)):
     for p in range(len(pair_list)):
         creating_db_file(pair_list[p], "Binance", flag, db_name = strat_db_list[i])
+
+
+
+
 
 ####################################################################################
 #[2] Data Gathering
