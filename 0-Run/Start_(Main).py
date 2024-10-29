@@ -86,7 +86,7 @@ from config_files.Account_Balance_files import Create_Trade_Balances
 Create_Trade_Balances(trading_pair=pair_list)
 
 
-#[1.5] Creates db file for strats
+# [1.5] Creates db file for strats
 sys_path.append("4-Strategies/Programs/")
 from Strategy_2_Legacy import creating_db_file
 strat_db_list = program_settings["application_settings"]["strategies"]
@@ -95,7 +95,12 @@ for i in range(len(strat_db_list)):
         creating_db_file(pair_list[p], "Binance", flag, db_name = strat_db_list[i])
 
 
-
+# [1.6] Creating Python Files for Trade Monitoring -> 5-TradeMonitoring
+from config_files.Trade_Monitoring_File_C import Create_Trade_Monitoring_Files
+TMF_main = Create_Trade_Monitoring_Files(trading_pair=pair_list, exchange="Binance", 
+                                         flag=flag, chart_intervals=time_intervals)
+TMF_main.create_asset_precision() # Asset Precison
+TMF_main.create_HIR_files() # HIR
 
 
 ####################################################################################
