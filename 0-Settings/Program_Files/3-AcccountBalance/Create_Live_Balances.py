@@ -43,7 +43,7 @@ run(trading_pair, exchange_name, db_name)
 
 
 
-
+"""
 #Variables
 trading_pair = ["USDT", "ETH", "ARB", "BTC"]
 #trading_pair = ["BTCUSDT"]
@@ -53,4 +53,4 @@ db_name = "Live_Balance"
 
 
 #Run program
-live_balances(trading_pair, Exchange, db_name)
+live_balances(trading_pair, Exchange, db_name)"""
