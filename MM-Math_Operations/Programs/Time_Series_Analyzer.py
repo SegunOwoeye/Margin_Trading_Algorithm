@@ -3,7 +3,7 @@
 #Data processing imports
 #import numpy as np
 import pandas as pd
-#import statsmodels
+import statsmodels
 #import statsmodels.api as sm
 from statsmodels.tsa.stattools import adfuller #coint, adfuller
 #import matplotlib.pyplot as plt
@@ -28,7 +28,6 @@ class Time_Series_Analysis:
         """ If the time Series is stationary it will return a True, if not it will return a False
                 -> Data type variable comes from the list of OHLCV data types where stationarity might need to be tested
         """
-        
         # [2.1] Getting data array
         data = self.price_data[data_type]
         # Forcing column to be numerical
@@ -36,7 +35,7 @@ class Time_Series_Analysis:
         returns = (data.pct_change().dropna() * 100)
         #print(returns)
         
-        pvalue = adfuller(returns, autolag='AIC', regression='nc')[1]
+        pvalue = adfuller(x=returns, autolag='AIC', regression='n')[1]
         if pvalue < cutoff: # The series is likley stationary
             return True, returns
         else: # The series is likley non-stationary (trending)
