@@ -247,7 +247,7 @@ def get_signals(trading_pair, chart_interval, std_threshold=2):
 
 
 """ [4] Backtesting Strategy 7"""
-def bt_strategy7(trading_pair, chart_interval, flag= None):#"optimise: TP/SL"):
+def bt_strategy7(trading_pair, chart_interval, flag):#"optimise: TP/SL"):
     # [4.1] Load Data
     data = get_signals(trading_pair=trading_pair, chart_interval=chart_interval)
     signals = data[0]
@@ -278,8 +278,10 @@ def bt_strategy7(trading_pair, chart_interval, flag= None):#"optimise: TP/SL"):
 
         tp_stop =  np.linspace(2,0,21)
         sl_stop =  np.linspace(2,0,21)
-
-        # SHORT
+        
+        #########
+        # SHORT #
+        #########
         short_profit_return = []
         counter = len(tp_stop) * len(sl_stop)
 
@@ -323,16 +325,18 @@ def bt_strategy7(trading_pair, chart_interval, flag= None):#"optimise: TP/SL"):
         short_return_values = [row['Returns'] for row in short_profit_return if row['Returns'] > 0]
         average_short_returns = sum(short_return_values)/len(short_return_values)
         #terminal_sys("cls")
-        print(f"Optimisation results for TP/SL: SHORT")
+        #print(f"Optimisation results for TP/SL: SHORT")
+        short_optimisation = []
         for item in short_profit_return:
             if item['Returns'] < 0: #item['Returns'] < average_short_returns or (item["win rate"] <= 30): # or item['TP']< item['SL']:# or (item['Returns'] < short_benchmark):
                 pass
             else:
-
-                print(item)
+                short_optimisation.append(item)
+                #print(item)
         
-
-        # Long
+        ########        
+        # Long #
+        ########
         long_profit_return = []
         long_benchmark = 0
         counter = len(tp_stop) * len(sl_stop)
@@ -375,16 +379,22 @@ def bt_strategy7(trading_pair, chart_interval, flag= None):#"optimise: TP/SL"):
         #terminal_sys("cls")
         long_return_values = [row['Returns'] for row in long_profit_return if row['Returns'] > 0]
         average_long_returns = sum(long_return_values)/len(long_return_values)
-        print(f"Optimisation results for TP/SL: LONG")
+        #print(f"Optimisation results for TP/SL: LONG")
+        long_optimisation = []
         for item in long_profit_return:
             if item['Returns'] < 0: #(item['Returns'] < average_long_returns) or (item["win rate"] <= 30): #or (item['TP']< item['SL']):# or (item['Returns'] < long_benchmark):
                 pass
             else:
-
-                print(item)
+                long_optimisation.append(item)
+                #print(item)
         
         
+        optimisation_results = {"short": short_optimisation, 
+                                "long": long_optimisation}
+        
 
+        return optimisation_results
+    
 
     # [4.2.2] Visual Inspection of Trades
     elif flag == None:
@@ -433,27 +443,34 @@ def bt_strategy7(trading_pair, chart_interval, flag= None):#"optimise: TP/SL"):
         print(total_returns, win_rate, total_trades)
         portfolio_short.plot().show()
 
+    
+
+    
 
 
 
+"""
 
-
-
-"""PARAMETERS"""
+'''PARAMETERS'''
 #STANDARD PARAMS
-trading_pair = ["BTCUSDT", "SOLUSDT"]#"ETHUSDT"]
+trading_pair = ["BTCUSDT", "ETHUSDT"]#"ETHUSDT"]
 chart_interval = "1h"
+flag = "optimise: TP/SL"
 
+"""
 
-def run(trading_pair, chart_interval, analyse_data=True):
+def run(trading_pair, chart_interval, flag, analyse_data=True):
     # [0.1] Checks to see if all data files exist
     for i in range(len(trading_pair)):
         file_name = f"6-DynamicBacktesting/data_gathered/{trading_pair[i]}/raw_output{chart_interval}.csv"
         if exists(file_name): # If the file Exists | Do Nothing
             pass
         else: # If the file does NOT exist | Create the file
-            #data_gathering(trading_pair[i], chart_interval, bt_days=30, limit=100) # -> 1h+
-            data_gathering(trading_pair[i], chart_interval, bt_days=30, limit=1000) # -> 1m+
+            # Gathers data file according to interval type
+            if "m" in chart_interval:
+                data_gathering(trading_pair[i], chart_interval, bt_days=30, limit=1000) # -> 1m+
+            else:
+                data_gathering(trading_pair[i], chart_interval, bt_days=30, limit=100) # -> 1h+
 
 
     # [0.2] Runs the analysis
@@ -461,7 +478,7 @@ def run(trading_pair, chart_interval, analyse_data=True):
         for i in range(len(trading_pair)):
             file_name = f"6-DynamicBacktesting/data_gathered/{trading_pair[i]}/raw_output{chart_interval}.csv"
             while True:
-                bt_strategy7(trading_pair=trading_pair, chart_interval=chart_interval)
+                bt_strategy7(trading_pair=trading_pair, chart_interval=chart_interval, flag=flag)
                 break
             break 
             
@@ -470,7 +487,7 @@ def run(trading_pair, chart_interval, analyse_data=True):
 
 
 # START PROGRAM
-run(trading_pair, chart_interval)
+#run(trading_pair, chart_interval)
 
 
 #rand("BTCUSDT", "5m", 7, 10, "max_drawdown")
