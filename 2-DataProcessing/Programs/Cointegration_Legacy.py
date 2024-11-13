@@ -203,7 +203,7 @@ class Cointegration:
         new_return2 = pd.DataFrame({"open_time": timestamp, 'close': [recent_return2]})
         new_return2 = new_return2.set_index("open_time")['close']
         
-        rreturns1 = pd.concat([returns1, new_return1])
+        returns1 = pd.concat([returns1, new_return1])
         returns2 = pd.concat([returns2, new_return2])
 
 
