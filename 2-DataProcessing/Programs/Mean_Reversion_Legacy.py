@@ -147,7 +147,7 @@ def stationarity_check(trading_pair, exchange_name, chart_interval, indicator_in
     if pvalue < cutoff: # The series is likley stationary
         return True, returns
     else: # The series is likley non-stationary (trending)
-        return False
+        return False, returns
 
 # CONFIRMS THE DATA SERIES IS STATIONARY, IMPLYING THE SERIES IS MEAN REVERTING - WORKING
 def mean_reversion(trading_pair, exchange_name, chart_interval, indicator_interval):
@@ -162,8 +162,8 @@ def mean_reversion(trading_pair, exchange_name, chart_interval, indicator_interv
         returns_variance = np.var(returns)
         returns_covriance = np.cov(returns) + 0.00
         returns_correlationcoefficient = np.corrcoef(returns) 
-        #plt.plot(returns)
-        #plt.show()
+        plt.plot(returns)
+        plt.show()
         
         recent_return = returns.iloc[-1]
         return ((stationarity), recent_return, returns_standard_deviation, returns_mean,
@@ -237,4 +237,4 @@ def run(trading_pair, exchange_name, chart_interval, indicator_interval):
             print(f"2-DataProcessing/Programs/{trading_pair}/Mean_Reversion_{trading_pair}interval={chart_interval}.py has error: " + str(e))
 
 
-#(run("BTCUSDT", "Binance", "5m", 100))
+(run("BTCUSDT", "Binance", "1h", 100))
