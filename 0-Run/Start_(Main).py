@@ -222,6 +222,28 @@ def data_processing_file_lists():
     
     return program_list
 
+
+def statistical_data_processing():
+    # Running Cointegration programs
+    coint_pairs = []
+    base_pair = pair_list[0]
+    for i in range(1, len(pair_list)):
+        added_item = [base_pair, pair_list[i]]
+        coint_pairs.append(added_item)
+    
+    run_Cointegration_files = []
+    for i in range(len(coint_pairs)): # 2-DataProcessing\Programs\BTCUSDT\Cointegration_BTCUSDTETHUSDTinterval=1h.py
+        for p in range(len(time_intervals)):
+            program_name = f"2-DataProcessing/Programs/{base_pair}/Cointegration_{coint_pairs[i][0]}{coint_pairs[i][1]}interval={time_intervals[p]}.py"
+            run_Cointegration_files.append(program_name)
+
+    
+    # List of Programs to Run
+    program_list = run_Cointegration_files
+
+    return program_list
+
+
 ####################################################################################
 #[4] Get Account Balances
 ####################################################################################
@@ -277,7 +299,7 @@ def live_trade_monitoring_file_lists():
 ####################################################################################
 #[6] Programs for Strategies to place orders
 ####################################################################################
-def strategy_file_list():
+def strategy_file_list(custom_run=True):
     # Running asset strategy 2 programs
     run_strategy_2 = []
     for n in range(len(pair_list)): 
@@ -285,6 +307,8 @@ def strategy_file_list():
             program_name = f"4-Strategies/Programs/{pair_list[n]}/Strategy_2_{pair_list[n]}interval={time_intervals[p]}.py"
             run_strategy_2.append(program_name)
     
+    if custom_run:
+        return []
 
     program_list = run_strategy_2
 
@@ -293,15 +317,17 @@ def strategy_file_list():
 ####################################################################################
 # [7] Programs for Orderbook Monitoring
 ####################################################################################
-def orderbook_monitoring_file_lists():
+def orderbook_monitoring_file_lists(custom_run=True):
     # Running orderbook monitoring programs
     run_orderbook_monitoring = []
     for n in range(len(pair_list)):
         for i in range(len(time_intervals)):
             program_name = f"5-Trade_Monitoring/Programs/{pair_list[n]}/Orderbook_Monitoring_{pair_list[n]}_Interval={time_intervals[i]}.py"
             run_orderbook_monitoring.append(program_name)
-
-
+    
+    if custom_run:
+        return []
+    
 
     program_list = run_orderbook_monitoring
 
@@ -347,7 +373,9 @@ gathering_data_programs_2 = gathering_data_file_list2()
 gathering_data_programs_3 = gathering_data_file_list3()
 raw_data_lists = gathering_data_programs_1 + gathering_data_programs_2 + gathering_data_programs_3
 # 3. Processed Data Gathering
-processed_data_program = data_processing_file_lists()
+TA_Data_Processing = data_processing_file_lists() # Technical Analysis
+SA_Data_Processing = statistical_data_processing() # Statistical Analysis
+processed_data_program = TA_Data_Processing + SA_Data_Processing 
 
 # 4. Trade monitoring
 trade_monitoring_programs = live_trade_monitoring_file_lists()
@@ -397,7 +425,7 @@ def run_programs():
         # Store the process in a list
         processes.append(proc)
         # Update the list of running files
-        running_files.set("\n".join([proc.args[1] for proc in processes]))
+        #running_files.set("\n".join([proc.args[1] for proc in processes]))
         
         # [2] Sending list of programs to database
         #Creating Table
@@ -439,7 +467,7 @@ def terminate_programs():
         print(proc)
         proc.terminate()"""
     # Clear the list of running files
-    running_files.set("")
+    #running_files.set("")
     processes.clear() # Removes previous processes from the list
 
 # Create a list to store the running processes
