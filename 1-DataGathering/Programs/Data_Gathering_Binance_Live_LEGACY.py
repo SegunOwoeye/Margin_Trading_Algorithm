@@ -101,8 +101,8 @@ def on_error(ws, error):
     print(error)
 def on_close(ws, close_status_code, close_msg):
     print("### closed ###")
-def on_open(ws,interval):
-    print(f"Opened connection: Live Data for Interval={interval}")
+def on_open(ws,interval, exchange_pair):
+    print(f"Opened connection: Live Data for {exchange_pair} at Interval={interval}")
 
 """
 4. RUNS THE PROGRAM
@@ -111,7 +111,7 @@ def run(exchange_pair, exchange_name, interval):
     while 1: # Run forever
         try: 
             ws = websocket.WebSocketApp(f"wss://stream.binance.com:9443/ws/{exchange_pair.lower()}@kline_{interval}",
-                                    on_open=partial(on_open, interval=interval),
+                                    on_open=partial(on_open, interval=interval, exchange_pair=exchange_pair),
                                     on_message=partial(on_message, exchange_pair=exchange_pair, exchange_name=exchange_name, interval=interval),
                                     on_error=on_error,
                                     on_close=on_close)
