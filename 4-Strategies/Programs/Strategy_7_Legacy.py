@@ -6,7 +6,7 @@
 
 """
 
-#General Use Imports
+# General Use Imports
 from datetime import datetime
 import sqlite3
 from time import sleep, time
@@ -14,13 +14,25 @@ from os.path import exists
 from sys import path
 from Trade_Order_Planning import pair_balance, calculating_markers
 
+# Custom Imports
+## ~ Email notification
+path.append("YY_Notifications/Programs") 
+from email_notification import email_alert 
+## ~ Convering chart interval time to actual time
+path.append("ZZ-General_Functions/Programs")
+from Interval_to_time import convert
+## ~ Suspend Programs
+path.append("ZZ-General_Functions/Programs")
+from Suspend_programs import Suspend_programs
+
 
 """ [1] Strategy 7 """
 class strategy:
     # [1] Initialising Variables
     def __init__(self, trading_pair_list: list, exchange_name: str, flag: int, chart_interval: str, 
                  leverage: int, L_TP: float, S_TP: float, L_SL: float, S_SL: float, tradeable_fund_Percentage: float,
-                 trade_type: str, indicator_interval=None, db_name="Strategy7_Orders", low_USDT_balance=5):
+                 trade_type: str, indicator_interval=None, db_name="Strategy7_Orders", low_USDT_balance=5,
+                 Strategy_Name="Strategy_7"):
         # Trading Pairs
         self.trading_pair_list = trading_pair_list
         self.base_pair = self.trading_pair_list[0]
@@ -41,9 +53,7 @@ class strategy:
         self.tradeable_fund_Percentage = tradeable_fund_Percentage
         self.low_USDT_balance = low_USDT_balance
         self.trade_type = trade_type
-
-
-
+        self.Strategy_Name = Strategy_Name
 
     # [2] Creating Storage File
     def creating_db_file(self):
@@ -193,7 +203,7 @@ class strategy:
             # [5.3.1.1] File Exists
             if exists(file_name) == True: 
                 ## [1] Renaming Strategy_Name
-                Strategy_Name = f"{Strategy_Name}{chart_interval}"
+                Strategy_Name = f"{self.Strategy_Name}{self.chart_interval}"
 
                 ## [2] Getting the Signal
                 signal = self.strat_logic()
@@ -227,21 +237,96 @@ class strategy:
                     
                     ## [4.1.3] Setting Up Calculation Class
                     calc_marker = calculating_markers(trading_pair=self.pair2, exchange_name=self.exchange_name,
-                                                      chart_interval=self.chart_interval, leverage=self.leverage,
+                                                      chart_interval=self.chart_interval, flag=self.flag, leverage=self.leverage,
                                                       L_TP=self.L_TP, S_TP=self.S_TP, L_SL=self.L_SL, S_SL=self.S_SL,
                                                       tradable_funds_percentage=self.tradeable_fund_Percentage, side=side)
                     trading_funds = calc_marker.tradable_funds()
                     """ The Numbers inside the curley brackets {}, are the positions in the database """
                     ### {5} Account Balance to Trade
                     balances = pair_balance(trading_pair=self.pair2, exchange_name=self.exchange_name,
-                                            chart_interval=self.chart_interval, flag=self.flag).flag_balance[1]
+                                            chart_interval=self.chart_interval, flag=self.flag).flag_balance()[1]
                     ### {4} Leverage
                     Leverage = self.leverage
                     ### {5} Equity
                     Equity = trading_funds[0]
                     ### {7} Hourly Interest Rate
                     Hourly_Interest_Rate = calc_marker.get_HIR()
+                    ### {8} Target Price (Take Profit)
+                    Target_Price = calc_marker.get_target_trade_price()
+                    ### {9} Stop Loss
+                    Stop_Loss = calc_marker.get_stop_loss_price()
+                    ### {22} Stop Limit Price
+                    Stop_Limit = calc_marker.get_stop_limit_price()
+                    ### {20} Order Type
+                    Order_type = "OCO" # Order Cancel Order 
+                    ### {18} Account Balance Traded 
+                    Account_Balance_Traded = trading_funds[1] 
+                    ### {0} Timestamp Time
+                    server_time = round(time(),0)
+
+                    # Separate pairs
+                    base_pair = calc_marker.pair_split()[1]
+                    asset_pair = calc_marker.pair_split()[0]
+
+                    ## [4.1.4] Setting asset_name deending on side
+                    if signal == 1: # Long
+                        asset_name = base_pair
+                    elif signal == -1: # Short
+                        asset_name = asset_pair
+
+                    """ Setting UP EMAIL NOTIFICATION"""
+                    ## [4.1.5] Setting up email contents
+                    subject = "Creating an Order"
+                    message = (f"A {side} {Order_type} order has been placed for {Equity} {asset_name} on a {Leverage}x Leverage using {Account_Balance_Traded} {asset_name} with a " + 
+                            f"target price of {Target_Price} {base_pair} for {self.Strategy_Name},{self.chart_interval}")
+                    email_recipient = "aces.cryptotrading@gmail.com"
+
                     
+                    ## [4.1.6] Sending Order Details to Orderbook
+                    ## [4.1.6.1] Opening Orderbook and gathering all order history
+                    connection = sqlite3.connect(file_name)
+                    cursor = connection.cursor()
+                    cursor.execute("Select * FROM trade_data")
+                    list_check = cursor.fetchall()
+
+                    duplicate_time = convert(chart_interval) * 2
+
+                    ## [4.1.6.2] Adding Orders to Orderbook
+                    ### When Orderbook is EMPTY
+                    if not list_check:
+                        cursor.execute(f"""INSERT INTO trade_data (time, server_time, trading_pair, Side, Order_Type, Leverage, Fund_Amount, Equity, HIR,
+                        Target_Price, Stop_Loss, Stop_Limit, Strat_Name, Status) VALUES 
+                                ("{date}", "{server_time}", "{self.pair2}", "{side}", "{Order_type}", {Leverage}, {Account_Balance_Traded}, {Equity},
+                                    {Hourly_Interest_Rate}, {Target_Price}, {Stop_Loss}, {Stop_Limit}, "{Strategy_Name}", "Ready")""")
+
+                        connection.commit()
+                        connection.close() #Closing the database
+                        # Send Email
+                        email_alert(subject, message, email_recipient)
+        
+                    ### If an order for the same strategy has recently been placed
+                    elif ((server_time-float(list_check[-1][1])) <= duplicate_time) and (list_check[-1][22] == Strategy_Name): # Wait and do nothing
+                        sleep(5)
+
+                    ### IF Account Balance is Low do Nothing
+                    elif float(balances) < float(self.low_USDT_balance):
+                        sleep(5)
+
+                    ### If the most recent entry isn't closed, do nothing -> MIGHT TAKE OUT
+                    elif list_check[-1][23] != "Closed":
+                        sleep(5)
+
+                    ### Place an Order
+                    else:
+                        cursor.execute(f"""INSERT INTO trade_data (time, server_time, trading_pair, Side, Order_Type, Leverage, Fund_Amount, Equity, HIR,
+                        Target_Price, Stop_Loss, Stop_Limit, Strat_Name, Status) VALUES 
+                                ("{date}", "{server_time}", "{self.pair2}", "{side}", "{Order_type}", {Leverage}, {Account_Balance_Traded}, {Equity},
+                                    {Hourly_Interest_Rate}, {Target_Price}, {Stop_Loss}, {Stop_Limit}, "{Strategy_Name}", "Ready")""")
+
+                        connection.commit()
+                        connection.close()
+                        # Send Email
+                        email_alert(subject, message, email_recipient)                    
 
 
                 ## [4.2] NO order signal -> Do Nothing
@@ -261,9 +346,43 @@ class strategy:
             Record_Output(self.base_pair, exchange_name, e, program_name)
 
 
+""" [2] Runs the Program """
+def run(trading_pair_list: list, exchange_name: str, flag: int, chart_interval: str, 
+        leverage: int, L_TP: float, S_TP: float, L_SL: float, S_SL: float, tradeable_fund_Percentage: float,
+        trade_type: str):
+    # [0] Declaring pairs
+    pair_1 = trading_pair_list[0]
+    pair_2 = trading_pair_list[1]
+    while 1:
+        # [1] Check to see if program should be suspended before running
+        Suspend_programs()
+        
+        """ CHECKS TO SEE IF THE REQUIRED FILES ARE PRESENT, IF NOT IT WAITS"""
+        # [2] Gets required filenames
+        # [2.1] Getting the Date
+        date_and_time = (datetime.now())
+        coint_date = date_and_time.strftime("%b%d%y%H")
+
+        # Coint Name
+        Coint_filename = f"2-DataProcessing/data_gathered/{pair_1}_data/{coint_date}{exchange_name}{pair_1}{pair_2}interval={chart_interval}Cointegration_data.db"
+        
+        # [3] Checks to see if required files exist
+        # [3.1] Coint Check
+        if exists(Coint_filename) == True:
+            # [3.1.1] Run Strategy Class
+            main = strategy(trading_pair_list=trading_pair_list, exchange_name=exchange_name, flag=flag, 
+                chart_interval=chart_interval, leverage=leverage, trade_type=trade_type, L_TP=L_TP,
+                S_TP=S_TP, L_SL=L_SL, S_SL=S_SL, tradeable_fund_Percentage=tradeable_fund_Percentage)
+            
+            main.printTodatabase()
+
+
+        else: sleep(1)
 
 
 
+
+'''
 """ TESTING """
 
 # Variables
@@ -288,5 +407,13 @@ main = strategy(trading_pair_list=trading_pair_list, exchange_name=exchange_name
 # Function Testing
 # main.creating_db_file() # -> Working
 # print(main.cointegration_read()) # -> Working
-print(main.strat_logic()) # ->
+# print(main.strat_logic()) # -> Working
+# main.printTodatabase() # -> Working
 
+# Run Function
+run(trading_pair_list=trading_pair_list, exchange_name=exchange_name, flag=flag, 
+                chart_interval=chart_interval, leverage=leverage, trade_type=trade_type, L_TP=L_TP,
+                S_TP=S_TP, L_SL=L_SL, S_SL=S_SL, tradeable_fund_Percentage=tradeable_fund_Percentage)
+
+                
+'''
