@@ -55,7 +55,7 @@ def creating_db_file(trading_pair, exchange_name, flag, db_name = "Strategy2_Ord
         connection.close()
 
 
-"""[2] READS THE DATA FROM THE PREVIOUS FILES AND OUTPUTS A BULLISH [1] OR BEARIRCH [-1] SIGNAL """
+"""[2] READS THE DATA FROM THE PREVIOUS FILES AND OUTPUTS A BULLISH [1] OR BEARISH [-1] SIGNAL """
 # READS THE DATA IN THE WILLIAMS FRACTAL DB FILE AND RETURNS A PROCESSING SIGNAL
 def WF_read(trading_pair, exchange_name, chart_interval):
     date_and_time = (datetime.now())
