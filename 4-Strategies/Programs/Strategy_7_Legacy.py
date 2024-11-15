@@ -63,9 +63,9 @@ class strategy:
 
         # [2.2] Assigning file name based on flag
         if self.flag == 0: # Live
-            file_name = f"4-Strategies/data_gathered/{self.base_pair}_data/{str(date)}{self.exchange_name}{self.base_pair}{self.pair2}{self.db_name}.db"
+            file_name = f"4-Strategies/data_gathered/{self.base_pair}_data/{str(date)}{self.exchange_name}{self.base_pair}{self.db_name}.db"
         elif self.flag == 1: # Demo
-            file_name = f"4-Strategies/data_gathered/{self.base_pair}_data/{str(date)}{self.exchange_name}{self.base_pair}{self.pair2}{self.db_name}DEMO.db"
+            file_name = f"4-Strategies/data_gathered/{self.base_pair}_data/{str(date)}{self.exchange_name}{self.base_pair}{self.db_name}DEMO.db"
         
         # [2.3] Checking to see if the file exists
         # [2.3.1] Do nothing in the file exists
@@ -146,10 +146,10 @@ class strategy:
                 # For testing
                 message = f"{total_signals}"# For testing
                 # RECORDING ERROR
-                program_name = f"4-Strategies/Programs/{self.base_pair}/Strategy_7_{self.base_pair}{self.pair2}interval={str(chart_interval)}.py"
+                program_name = f"4-Strategies/Programs/{self.base_pair}/Strategy_7_{self.base_pair}{self.pair2}interval={self.chart_interval}.py"
                 path.append("00-Run_Log/Programs")
                 from Log_Output import Record_Output
-                Record_Output(self.base_pair, exchange_name, message, program_name)
+                Record_Output(self.base_pair, self.exchange_name, message, program_name)
                 sleep(1)
             else:
                 pass
@@ -165,11 +165,11 @@ class strategy:
     
 
         except Exception as e:
-            program_name = f"4-Strategies/Programs/{self.base_pair}/Strategy_7_{self.base_pair}{self.pair2}interval={str(chart_interval)}.py"
+            program_name = f"4-Strategies/Programs/{self.base_pair}/Strategy_7_{self.base_pair}{self.pair2}interval={self.chart_interval}.py"
             # RECORDING ERROR
             path.append("00-Run_Log/Programs")
             from Log_Output import Record_Output
-            Record_Output(self.base_pair, exchange_name, e, program_name)
+            Record_Output(self.base_pair, self.exchange_name, e, program_name)
 
             path.append("ZZ-General_Functions/Programs")
             from Error_handling import Handling_Error
@@ -193,9 +193,9 @@ class strategy:
 
         # [5.2] Setting File Name
         if self.flag == 0: # Live
-            file_name = f"4-Strategies/data_gathered/{self.base_pair}_data/{str(date_db)}{self.exchange_name}{self.base_pair}{self.pair2}{self.db_name}.db"
+            file_name = f"4-Strategies/data_gathered/{self.base_pair}_data/{str(date_db)}{self.exchange_name}{self.base_pair}{self.db_name}.db"
         elif self.flag == 1: # Demo
-            file_name = f"4-Strategies/data_gathered/{self.base_pair}_data/{str(date_db)}{self.exchange_name}{self.base_pair}{self.pair2}{self.db_name}DEMO.db"
+            file_name = f"4-Strategies/data_gathered/{self.base_pair}_data/{str(date_db)}{self.exchange_name}{self.base_pair}{self.db_name}DEMO.db"
         
         # [5.3]
         try:
@@ -289,7 +289,7 @@ class strategy:
                     cursor.execute("Select * FROM trade_data")
                     list_check = cursor.fetchall()
 
-                    duplicate_time = convert(chart_interval) * 2
+                    duplicate_time = convert(self.chart_interval) * 2
 
                     ## [4.1.6.2] Adding Orders to Orderbook
                     ### When Orderbook is EMPTY
@@ -305,7 +305,7 @@ class strategy:
                         email_alert(subject, message, email_recipient)
         
                     ### If an order for the same strategy has recently been placed
-                    elif ((server_time-float(list_check[-1][1])) <= duplicate_time) and (list_check[-1][22] == Strategy_Name): # Wait and do nothing
+                    elif ((server_time-float(list_check[-1][1])) <= duplicate_time) and (list_check[-1][22] == Strategy_Name) and (list_check[-1][2] == self.pair2): # Wait and do nothing
                         sleep(5)
 
                     ### IF Account Balance is Low do Nothing
@@ -339,11 +339,11 @@ class strategy:
 
         # [5.4] File ouput recording the error
         except Exception as e: 
-            program_name = f"4-Strategies/Programs/{self.base_pair}/Strategy_7_{self.base_pair}{self.pair2}interval={str(chart_interval)}.py"
+            program_name = f"4-Strategies/Programs/{self.base_pair}/Strategy_7_{self.base_pair}interval={str(self.chart_interval)}.py"
             # RECORDING ERROR
             path.append("00-Run_Log/Programs")
             from Log_Output import Record_Output
-            Record_Output(self.base_pair, exchange_name, e, program_name)
+            Record_Output(self.base_pair, self.exchange_name, e, program_name)
 
 
 """ [2] Runs the Program """
@@ -365,7 +365,6 @@ def run(trading_pair_list: list, exchange_name: str, flag: int, chart_interval: 
 
         # Coint Name
         Coint_filename = f"2-DataProcessing/data_gathered/{pair_1}_data/{coint_date}{exchange_name}{pair_1}{pair_2}interval={chart_interval}Cointegration_data.db"
-        
         # [3] Checks to see if required files exist
         # [3.1] Coint Check
         if exists(Coint_filename) == True:
