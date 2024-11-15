@@ -332,19 +332,33 @@ def strategy_file_list(custom_run=False, strategy2=False, strategy7=True):
 ####################################################################################
 # [7] Programs for Orderbook Monitoring
 ####################################################################################
-def orderbook_monitoring_file_lists(custom_run=True):
+def orderbook_monitoring_file_lists(custom_run=False, strategy2=False, strategy7=True):
     # Running orderbook monitoring programs
-    run_orderbook_monitoring = []
-    for n in range(len(pair_list)):
-        for i in range(len(time_intervals)):
-            program_name = f"5-Trade_Monitoring/Programs/{pair_list[n]}/Orderbook_Monitoring_{pair_list[n]}_Interval={time_intervals[i]}.py"
-            run_orderbook_monitoring.append(program_name)
+    # ~ Strategy 2
+    run_orderbook_monitoring_strat2 = []
+    if strategy2 == False:
+        pass
+    else:
+        for n in range(len(pair_list)):
+            for i in range(len(time_intervals)):
+                program_name = f"5-Trade_Monitoring/Programs/{pair_list[n]}/Strategy2_Orderbook_Monitoring_{pair_list[n]}_Interval={time_intervals[i]}.py"
+                run_orderbook_monitoring_strat2.append(program_name)
     
+    # ~ Strategy 7
+    run_orderbook_monitoring_strat7 = []
+    if strategy7 == False:
+        pass
+    else:
+        for n in range(len(pair_list)):
+            for i in range(len(time_intervals)):
+                program_name = f"5-Trade_Monitoring/Programs/{pair_list[n]}/Strategy7_Orderbook_Monitoring_{pair_list[n]}_Interval={time_intervals[i]}.py"
+                run_orderbook_monitoring_strat7.append(program_name)
+
     if custom_run:
         return []
     
 
-    program_list = run_orderbook_monitoring
+    program_list = run_orderbook_monitoring_strat2 + run_orderbook_monitoring_strat7
 
     return program_list
 
