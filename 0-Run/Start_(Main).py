@@ -86,7 +86,7 @@ from config_files.Account_Balance_files import Create_Trade_Balances
 Create_Trade_Balances(trading_pair=pair_list)
 
 
-# [1.5] Creates db file for strats
+# [1.5] Creates db file for strats -> DELETE?
 sys_path.append("4-Strategies/Programs/")
 from Strategy_2_Legacy import creating_db_file
 strat_db_list = program_settings["application_settings"]["strategies"]
@@ -299,18 +299,33 @@ def live_trade_monitoring_file_lists():
 ####################################################################################
 #[6] Programs for Strategies to place orders
 ####################################################################################
-def strategy_file_list(custom_run=True):
+def strategy_file_list(custom_run=False, strategy2=False, strategy7=True):
     # Running asset strategy 2 programs
     run_strategy_2 = []
-    for n in range(len(pair_list)): 
-        for p in range(len(time_intervals)):
-            program_name = f"4-Strategies/Programs/{pair_list[n]}/Strategy_2_{pair_list[n]}interval={time_intervals[p]}.py"
-            run_strategy_2.append(program_name)
+    if strategy2 == False:
+        pass
+    else:
+        for n in range(len(pair_list)): 
+            for p in range(len(time_intervals)):
+                program_name = f"4-Strategies/Programs/{pair_list[n]}/Strategy_2_{pair_list[n]}interval={time_intervals[p]}.py"
+                run_strategy_2.append(program_name)
     
+    
+    # Running Asset Strategy 7 Programs
+    run_strategy_7 = []
+    if strategy7 == False:
+        pass
+    else:
+        for n in range(1,len(pair_list)):
+            for p in range(len(time_intervals)):
+                program_name = f"4-Strategies/Programs/{pair_list[0]}/Strategy_7_{pair_list[0]}{pair_list[n]}interval={time_intervals[p]}.py"
+                run_strategy_7.append(program_name)
+
+
     if custom_run:
         return []
 
-    program_list = run_strategy_2
+    program_list = run_strategy_2 + run_strategy_7
 
     return program_list
 
