@@ -7,7 +7,7 @@ from numba.core.imputils import Registry
 from numba.core import types
 from numba.np import arrayobj
 
-registry = Registry('cffiimpl')
+registry = Registry()
 
 @registry.lower('ffi.from_buffer', types.Buffer)
 def from_buffer(context, builder, sig, args):

@@ -72,7 +72,6 @@ def get_html_template():
     <html>
     <head>
         <style>
-
             .annotation_table {
                 color: #000000;
                 font-family: monospace;
@@ -166,7 +165,7 @@ def get_html_template():
             <table class="annotation_table tex2jax_ignore">
                 {%- for num, line, hl, hc in func_data[func_key]['pygments_lines'] -%}
                     {%- if func_data[func_key]['ir_lines'][num] %}
-                        <tr><td style="text-align:left;" class="{{func_data[func_key]['python_tags'][num]}}">
+                        <tr><td class="{{func_data[func_key]['python_tags'][num]}}">
                             <details>
                                 <summary>
                                     <code>
@@ -178,7 +177,7 @@ def get_html_template():
                                     <tbody>
                                         {%- for ir_line, ir_line_type in func_data[func_key]['ir_lines'][num] %}
                                             <tr class="ir_code">
-                                                <td style="text-align: left;"><code>
+                                                <td><code>
                                                 &nbsp;
                                                 {{- '&nbsp;'*func_data[func_key]['python_indent'][num]}}
                                                 {{ '&nbsp;'*func_data[func_key]['ir_indent'][num][loop.index0]}}{{ir_line|e -}}
@@ -192,7 +191,7 @@ def get_html_template():
                                 </details>
                         </td></tr>
                     {% else -%}
-                        <tr><td style="text-align:left; padding-left: 22px;" class="{{func_data[func_key]['python_tags'][num]}}">
+                        <tr><td style=" padding-left: 22px;" class="{{func_data[func_key]['python_tags'][num]}}">
                             <code>
                                 {{num}}:
                                 {{'&nbsp;'*func_data[func_key]['python_indent'][num]}}{{hl}}

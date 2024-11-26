@@ -1,4 +1,4 @@
-#!c:\users\oluse\onedrive\desktop\segun\crypto\futures\backtesting-binance_v1\.venv\scripts\python.exe
+#!/usr/bin/env python
 # -*- coding: UTF-8 -*-
 from __future__ import print_function, division, absolute_import
 

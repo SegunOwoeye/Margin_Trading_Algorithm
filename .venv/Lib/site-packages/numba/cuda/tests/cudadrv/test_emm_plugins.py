@@ -105,13 +105,11 @@ class TestDeviceOnlyEMMPlugin(CUDATestCase):
     """
 
     def setUp(self):
-        super().setUp()
         # Always start afresh with a new context and memory manager
         cuda.close()
         cuda.set_memory_manager(DeviceOnlyEMMPlugin)
 
     def tearDown(self):
-        super().tearDown()
         # Unset the memory manager for subsequent tests
         cuda.close()
         cuda.cudadrv.driver._memory_manager = None

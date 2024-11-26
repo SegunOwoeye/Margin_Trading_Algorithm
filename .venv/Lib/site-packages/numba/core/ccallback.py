@@ -16,14 +16,14 @@ from numba.core.compiler_lock import global_compiler_lock
 class _CFuncCompiler(_FunctionCompiler):
 
     def _customize_flags(self, flags):
-        flags.no_cpython_wrapper = True
-        flags.no_cfunc_wrapper = False
+        flags.set('no_cpython_wrapper', True)
+        flags.set('no_cfunc_wrapper', False)
         # Disable compilation of the IR module, because we first want to
         # add the cfunc wrapper.
-        flags.no_compile = True
+        flags.set('no_compile', True)
         # Object mode is not currently supported in C callbacks
         # (no reliable way to get the environment)
-        flags.enable_pyobject = False
+        flags.set('enable_pyobject', False)
         if flags.force_pyobject:
             raise NotImplementedError("object mode not allowed in C callbacks")
         return flags

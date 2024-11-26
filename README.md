@@ -24,6 +24,13 @@ Use the "Start_(Main).py" file in "0-Run" folder to run the trading Algorithm
 ### Things to rememnber:
 - Program is Written in Python 3.8.5
 - Github doesn't store empty folders
+- .venv file is no longer going to git
+
+
+## New Libraries to install
+-
+-
+
 
 
 
