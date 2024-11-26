@@ -23,6 +23,7 @@ class admin:
                 "STP": [""],
                 "LSL": [""],
                 "SSL": [""],
+                "TFP": [""], # Tradable Fund Percentage: 50 %
                 "date_updated": [""]        
                 }
                 
@@ -50,6 +51,7 @@ class admin:
                     "STP": filtered_df.select("STP").item(),
                     "LSL": filtered_df.select("LSL").item(),
                     "SSL": filtered_df.select("SSL").item(),
+                    "TFP": filtered_df.select("TFP").item(),
                         }
             
             return data
@@ -60,7 +62,7 @@ class admin:
 
         
 
-
+"""
 # Variables
 
 trading_pair = "ETHUSDT"
@@ -70,4 +72,4 @@ interval = "1h"
 # Run function
 main = admin()
 # main.create_db() # -> Working
-print(main.get_tpsl_data(trading_pair=trading_pair, strategy=strategy, interval=interval))
+print(main.get_tpsl_data(trading_pair=trading_pair, strategy=strategy, interval=interval))"""

@@ -7,6 +7,11 @@ path.append("0-Settings/Program_Files/Misc/")
 from Strategy_7_Legacy import run
 from read_config import run as config # type: ignore
 
+# Get Custom TPSL Lib
+path.append("5-Trade_Monitoring/Programs")
+from TPSL_admin import admin
+
+
 
 # Variables
 trading_pair_list = ["BTCUSDT", "ETHUSDT"] 
@@ -15,11 +20,14 @@ flag = config()["application_settings"]['trading_environment']['flag']
 chart_interval = "1h"
 leverage = 3
 trade_type = "S"
-L_TP = 0
-S_TP = 0.9
-L_SL = 0
-S_SL = 1.5
-tradeable_fund_Percentage = 50
+
+# TPSL Data
+TPSL_data = admin().get_tpsl_data(trading_pair=trading_pair_list[1], strategy="7", interval=chart_interval)
+L_TP = float(TPSL_data["LTP"])
+S_TP = float(TPSL_data["STP"])
+L_SL = float(TPSL_data["LSL"])
+S_SL = float(TPSL_data["SSL"])
+tradeable_fund_Percentage = float(TPSL_data["TFP"])
 
 # Run Function
 run(trading_pair_list=trading_pair_list, exchange_name=exchange_name, flag=flag, 
