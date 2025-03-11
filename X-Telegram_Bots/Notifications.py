@@ -3,7 +3,7 @@ from telegram import Update
 from telegram.ext import Application, CommandHandler, MessageHandler, filters, ContextTypes
 
 
-Token: Final = "6852420818:AAFTPeZhSb2i_-GGUzXrsgMMGdjncAZTt1I"
+Token: Final = ""
 Bot_Username: Final = "@BinanceNotification117Bot"
 
 #Commands
