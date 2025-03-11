@@ -3,7 +3,7 @@ from email.message import EmailMessage
 
 def email_alert(subject, body, to):
     user = "aces.cryptotrading@gmail.com"
-    password = "ostqchowcpbixhut"
+    password = ""
 
     msg = EmailMessage()
     msg.set_content(body)
@@ -12,7 +12,7 @@ def email_alert(subject, body, to):
     msg['from'] = user
 
     user = "aces.cryptotrading@gmail.com"
-    password = "ostqchowcpbixhut"
+    password = ""
 
     server = smtplib.SMTP("smtp.gmail.com", 587)
     server.starttls()
@@ -23,5 +23,5 @@ def email_alert(subject, body, to):
 
 # Test
 
-#email_alert("Hello", "This is a simple test", "olusegunowoeye@icloud.com")
+#email_alert("Hello", "This is a simple test", "johndoe@icloud.com")
 
