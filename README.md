@@ -27,15 +27,8 @@ Use the "Start_(Main).py" file in "0-Run" folder to run the trading Algorithm
 - .venv file is no longer going to git
 
 
-## New Libraries to install
--
--
-
-
-
-
 ## Copyright
 
-This program is not for public use and belongs soley to the Programmer Olusegun Owoeye.
-
+This project is licensed under a **Non-Commercial License**.
+View the [LICENSE](LICENSE.md) file for details.
 
