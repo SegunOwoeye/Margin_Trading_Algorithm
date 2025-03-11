@@ -1,6 +1,6 @@
 # Margin_Trading_Algorithm
 
-Margin Trading Algorithm is a Private python library for the Automated Trading of Crypto Currencies in the Binance Exchange using Margin trading.
+Margin Trading Algorithm 2.0 is a python library for the Automated Trading of Crypto Currencies in the Binance Exchange using Margin trading. This is an outdated library and a 3.0 version of the program is being built.
 
 ## Running on Windows OS
 
