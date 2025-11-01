@@ -1,100 +1,46 @@
-# THIS FILE CREATES FILES FOR MONITORING TRADES
+"""Legacy stub for creating trade monitoring wrapper scripts."""
+from __future__ import annotations
 
-# Imports
-from os.path import exists
+import warnings
+from typing import Sequence
+
+
+def _warn_deprecated(name: str) -> None:
+    warnings.warn(
+        f"{name} is deprecated. The orchestrator now invokes the monitoring modules "
+        "directly without generating pair specific files.",
+        DeprecationWarning,
+        stacklevel=2,
+    )
 
 # Main Function
 class Create_Trade_Monitoring_Files:
-    # [1] Initialising Variables
-    def __init__(self, trading_pair, exchange, flag, chart_intervals, Override=False):
-        self.trading_pair = trading_pair
+    def __init__(
+        self,
+        trading_pair: Sequence[str],
+        exchange: str,
+        flag: int,
+        chart_intervals: Sequence[str],
+        Override: bool = False,
+    ) -> None:
+        self.trading_pair = tuple(trading_pair)
+        self.exchange = exchange
+        self.flag = flag
+        self.chart_intervals = tuple(chart_intervals) if isinstance(chart_intervals, (list, tuple)) else (chart_intervals,)
+        self.Override = Override
+
+    
         self.exchange = exchange
         self.flag = flag
         self.Override = Override
 
-        # Turning chart interval into a list
-        if isinstance(chart_intervals, list):
-            self.chart_intervals = chart_intervals
-        else:
-            self.chart_intervals = [chart_intervals]
 
-    
-    # [2] Create Asset Precision Files
-    def create_asset_precision(self):
-        # Create Python File
-        for p in range(len(self.trading_pair)):
-            for t in range(len(self.chart_intervals)):
-                file_directory =  f"5-Trade_Monitoring/Programs/{self.trading_pair[p]}/"
-                python_file = f"{file_directory}asset_precision_{self.trading_pair[p]}.py"
-                
-                # Checks to see if the file already exists
-                if exists(python_file) == True and self.Override == False: #If python file exists do nothing and doesn't need to be overided
-                    pass
-                else: # Creates new files if python doesn't exists
-                    #Creates python file for indicators across specified time intervals
-                    file_contents = f"""from sys import path
-
-path.append("5-Trade_Monitoring/Programs")
-from asset_precision_Legacy import run
-
-# Run program
-run("{self.trading_pair[p]}")
-
-                        """
-                    f = open(python_file, "w")
-                    f.write(file_contents)
-                    f.close()
-
-                    #print(f"{python_file} file created")
-
-    
-    # [3] Create HIR Files
-    def create_HIR_files(self):
-        # Create Python File
-        for p in range(len(self.trading_pair)):
-            for t in range(len(self.chart_intervals)):
-                file_directory =  f"5-Trade_Monitoring/Programs/{self.trading_pair[p]}/"
-                python_file = f"{file_directory}Hourly_Interest_Rate_{self.trading_pair[p]}.py"
-                # Checks to see if the file already exists
-                if exists(python_file) == True and self.Override == False: #If python file exists do nothing and doesn't need to be overided
-                    pass
-                else: # Creates new files if python doesn't exists
-                    #Creates python file for indicators across specified time intervals
-                    file_contents = f"""from sys import path
-
-path.append("5-Trade_Monitoring/Programs")
-from Hourly_Interest_Rate_Legacy import run
-
-# Run program
-run("{self.trading_pair[p]}")
-
-                        """
-                    f = open(python_file, "w")
-                    f.write(file_contents)
-                    f.close()
-
-                    #print(f"{python_file} file created")
+    def create_asset_precision(self):  # type: ignore[no-untyped-def]
+        _warn_deprecated("Create_Trade_Monitoring_Files.create_asset_precision")
+        return []
 
 
+    def create_HIR_files(self):  # type: ignore[no-untyped-def]
+        _warn_deprecated("Create_Trade_Monitoring_Files.create_HIR_files")
+        return []
 
-
-
-"""
-#''' Testing '''
-# Variables
-trading_pair = ["BTCUSDT", "ETHUSDT"]
-exchange = "Binance" 
-flag = 1 
-chart_intervals = "5m"
-Override = False
-
-
-# Run
-main = Create_Trade_Monitoring_Files(trading_pair=trading_pair, exchange=exchange,
-                                     flag=flag, chart_intervals=chart_intervals, Override=Override)
-
-# main.create_asset_precision() # -> Working
-# main.create_HIR_files() # -> Working
-
-
-"""
